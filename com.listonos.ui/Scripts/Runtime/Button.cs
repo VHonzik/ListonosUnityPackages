@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Listonos.Buttons
+namespace Listonos.UI
 {
   public class Button : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
   {

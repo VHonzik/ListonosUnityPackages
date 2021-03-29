@@ -1,15 +1,13 @@
 # Listonos Unity Packages
-Small and personal Unity packages for kickstarting Unity 2D projects:
+Small and personal Unity packages for kickstarting Unity 2D projects.
 
 ## Packages
 
-### Buttons
+### UI
 
-Drop-in UI button prefabs that use excelent [Kenney Assets](https://www.kenney.nl/assets) sprites and fonts and wrap the default UI.Button with additional functionality.
+Drop-in UI elements prefabs that use excelent [Kenney Assets](https://www.kenney.nl/assets) sprites and fonts. Some of them also wrap the Unity UI scripts with additional functionality. In this package is included a tiny generic navigation system that allows to enable or disable hierarchy of UI objects based on user defined enum type.
 
-### Navigation System
-
-Tiny generic navigation system that allows to enable or disable hierarchy of UI objects based on user defined enum values.
+![UI elements preview](com.listonos.ui/Documentation/UIElementsPreview.PNG)
 
 ## How to Install
 

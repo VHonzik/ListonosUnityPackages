@@ -17,6 +17,15 @@ TextureImporter:
   - first:
       213: 6863401354029579308
     second: selectedButton
+  - first:
+      213: -7663119352978902493
+    second: checkboxPicked
+  - first:
+      213: -7092410542237855246
+    second: checkboxNormal
+  - first:
+      213: 4127043833092046899
+    second: checkboxHover
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -122,7 +131,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 36
         width: 49
         height: 49
       alignment: 0
@@ -143,7 +152,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 49
-        y: 0
+        y: 36
         width: 49
         height: 49
       alignment: 0
@@ -164,7 +173,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 98
-        y: 0
+        y: 36
         width: 49
         height: 49
       alignment: 0
@@ -185,7 +194,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 147
-        y: 0
+        y: 36
         width: 49
         height: 49
       alignment: 0
@@ -206,7 +215,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 196
-        y: 0
+        y: 36
         width: 49
         height: 49
       alignment: 0
@@ -218,6 +227,69 @@ TextureImporter:
       bones: []
       spriteID: c2c3ed9ea23bf3f50800000000000000
       internalID: 6863401354029579308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: checkboxPicked
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3227546ac8127a590800000000000000
+      internalID: -7663119352978902493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: checkboxNormal
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 0
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f15da46032b29d90800000000000000
+      internalID: -7092410542237855246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: checkboxHover
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 0
+        width: 36
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3300beb0084364930800000000000000
+      internalID: 4127043833092046899
       vertices: []
       indices: 
       edges: []

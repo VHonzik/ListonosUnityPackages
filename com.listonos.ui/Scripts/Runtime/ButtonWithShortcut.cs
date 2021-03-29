@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Listonos.Buttons
+namespace Listonos.UI
 {
   public class ButtonWithShortcut : MonoBehaviour
   {

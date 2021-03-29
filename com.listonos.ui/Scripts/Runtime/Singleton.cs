@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Listonos.NavigationSystem
+namespace Listonos
 {
   public class Singleton<T> where T : class
   {
