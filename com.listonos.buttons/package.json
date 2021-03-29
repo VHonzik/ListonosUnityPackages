@@ -1,6 +1,6 @@
 {
   "name": "com.listonos.buttons",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "displayName": "Listonos' buttons",
   "description": "Set of UI button elements stylized with Kenny's sprites.",
   "unity": "2020.3",
