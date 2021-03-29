@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,10 +28,7 @@ namespace Listonos.Buttons
         if (value != interactible)
         {
           interactible = value;
-          if (UnityButton)
-          {
-            UnityButton.interactable = interactible;
-          }
+          UnityButton.interactable = interactible;
         }
       }
 
@@ -38,37 +36,41 @@ namespace Listonos.Buttons
 
     public void OnPointerDown(PointerEventData eventData)
     {
-      if (ButtonTextTransform && Interactible)
+      if (Interactible)
       {
         ButtonTextTransform.anchoredPosition = PressedButtonTextAnchoredPosition;
+        PressOffsetApplied?.Invoke(this, new PressOffsetEventArgs() { Offset = PressedOffset });
       }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-      if (ButtonTextTransform && Interactible)
+      if (Interactible)
       {
         ButtonTextTransform.anchoredPosition = NormalButtonTextAnchoredPosition;
+        PressOffsetRemoved?.Invoke(this, new PressOffsetEventArgs() { Offset = PressedOffset });
       }
     }
 
-    // Start is called before the first frame update
+    public class PressOffsetEventArgs : EventArgs
+    {
+      public int Offset { get; set; }
+    }
+
+    public event EventHandler<PressOffsetEventArgs> PressOffsetApplied;
+    public event EventHandler<PressOffsetEventArgs> PressOffsetRemoved;
+
+
     void Start()
     {
-      if (UnityButton)
-      {
-        Interactible = UnityButton.interactable;
-      }
+      Debug.AssertFormat(UnityButton != null, "Button behavior is missing UnityButton reference.");
+      Interactible = UnityButton.interactable;
 
-      if (ButtonText)
-      {
-        ButtonTextTransform = ButtonText.GetComponent<RectTransform>();
-        if (ButtonTextTransform)
-        {
-          NormalButtonTextAnchoredPosition = ButtonTextTransform.anchoredPosition;
-          PressedButtonTextAnchoredPosition = new Vector2(ButtonTextTransform.anchoredPosition.x, ButtonTextTransform.anchoredPosition.y - PressedOffset);
-        }
-      }
+      Debug.AssertFormat(ButtonText != null, "Button behavior is missing ButtonText reference.");
+      ButtonTextTransform = ButtonText.GetComponent<RectTransform>();
+      Debug.AssertFormat(ButtonTextTransform != null, "Button behavior is missing RectTransform on ButtonText reference.");
+      NormalButtonTextAnchoredPosition = ButtonTextTransform.anchoredPosition;
+      PressedButtonTextAnchoredPosition = new Vector2(NormalButtonTextAnchoredPosition.x, NormalButtonTextAnchoredPosition.y - PressedOffset);
     }
   }
 }
