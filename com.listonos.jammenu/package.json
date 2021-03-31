@@ -1,0 +1,22 @@
+{
+  "name": "com.listonos.jammenu",
+  "version": "0.0.0",
+  "displayName": "Listonos' Jam Menu",
+  "description": "Skeleton for main menu, options and credits screens inteded as a starting point for game jams.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.1",
+    "com.listonos.ui": "0.0.1"
+ },
+ "keywords": [
+    "ui",
+    "mainmenu",
+    "credits",
+    "gamejam"
+  ],
+  "author": {
+    "name": "Vaclav Honzik",
+    "email": "honzik.vaclav@gmail.com"
+  }
+}

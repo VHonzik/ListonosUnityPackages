@@ -1,6 +1,6 @@
 {
   "name": "com.listonos.ui",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "displayName": "Listonos' UI",
   "description": "Set of drop-in UI elements stylized with Kenny's assets.",
   "unity": "2020.3",

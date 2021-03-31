@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Listonos.NavigationSystem
 {
@@ -22,7 +21,6 @@ namespace Listonos.NavigationSystem
       {
         if (!value.Equals(currentScreen))
         {
-          Debug.Log(string.Format("Changed nav screen to: {0}", value));
           currentScreen = value;
           ScreenChanged?.Invoke(this, new ScreenChangedEventArgs() { NewScreen = currentScreen });
         }
