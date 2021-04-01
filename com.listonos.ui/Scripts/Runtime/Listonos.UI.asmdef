@@ -2,7 +2,8 @@
     "name": "Listonos.UI",
     "rootNamespace": "",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:701b1d698f0d44b48a39b9abc88c0a34"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,6 +12,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.listonos.audiosystem",
+            "expression": "0.0.0",
+            "define": "LISTONOS_AUDIO_SYSTEM_PRESENT"
+        }
+    ],
     "noEngineReferences": false
 }

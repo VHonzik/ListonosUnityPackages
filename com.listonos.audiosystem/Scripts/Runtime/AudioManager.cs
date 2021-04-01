@@ -81,6 +81,15 @@ namespace Listonos.AudioSystem
       MusicAudioChannel.Enqueue(audioClip);
     }
 
+    // Checks if nothing is playing currently and plays the passed clip
+    public void TryPlayingSfxClip(AudioClip audioClip)
+    {
+      if (SfxAudioChannel.AudioState == AudioState.NoClip)
+      {
+        SfxAudioChannel.Enqueue(audioClip);
+      }
+    }
+
     // Fades out current sfx clip, if any, and plays the passed clip
     public void PlaySfxClip(AudioClip audioClip)
     {
