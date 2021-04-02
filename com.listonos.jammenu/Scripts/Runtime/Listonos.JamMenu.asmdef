@@ -2,8 +2,8 @@
     "name": "Listonos.JamMenu",
     "rootNamespace": "",
     "references": [
-        "GUID:0f25c36d3bd50904dad31311682a4724",
-        "GUID:701b1d698f0d44b48a39b9abc88c0a34"
+        "GUID:701b1d698f0d44b48a39b9abc88c0a34",
+        "GUID:0f25c36d3bd50904dad31311682a4724"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

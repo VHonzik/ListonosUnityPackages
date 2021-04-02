@@ -58,7 +58,9 @@ namespace Listonos.UI
 
     void Update()
     {
-      if (gameObject.activeInHierarchy && Shortcut != KeyCode.None && Input.GetKeyDown(Shortcut) && Button.Interactible)
+      var shortcutCheck = Shortcut != KeyCode.None && Input.GetKeyDown(Shortcut);
+
+      if (gameObject.activeInHierarchy && shortcutCheck && Button.Interactible)
       {
         UnityButton.onClick.Invoke();
       }

@@ -1,0 +1,17 @@
+{
+  "name": "com.listonos.camera",
+  "version": "0.0.0",
+  "displayName": "Listonos' Camera",
+  "description": "Collection of camera controls.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {
+ },
+ "keywords": [
+    "camera"
+  ],
+  "author": {
+    "name": "Vaclav Honzik",
+    "email": "honzik.vaclav@gmail.com"
+  }
+}

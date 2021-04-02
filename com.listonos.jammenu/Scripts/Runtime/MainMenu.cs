@@ -11,6 +11,7 @@ namespace Listonos.JamMenu
   public class MainMenu : MonoBehaviour
   {
     public string GameSceneName;
+
     public KeyCode ExitShortcut = KeyCode.Escape;
 
 #if LISTONOS_AUDIO_SYSTEM_PRESENT
