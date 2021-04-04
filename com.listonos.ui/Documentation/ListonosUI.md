@@ -1,6 +1,6 @@
 # Listonos' UI
 
-Listonos' UI is a collection of UI elements and tools that is easy to use and looks good right out of the box. It is mainly inteded for jumpstarting game dev jam projects.
+Listonos' UI is a collection of UI elements and tools that is easy to use and looks good right out of the box. It is mainly intended for jump-starting game dev jam projects.
 
 ## UI elements usage
 
@@ -15,7 +15,7 @@ Because we wnated users to provide their own `enum` for navigation screens for e
 ```C#
 using Listonos.NavigationSystem;
 
-// Somwhere in the main, predefined assembly, define enum with navigation screens
+// Somewhere in the main, predefined assembly, define enum with navigation screens
 public enum NavigationScreen
 {
   MainMenu,
@@ -44,3 +44,7 @@ public class NavigationScreenFilter : NavigationFilter<NavigationScreen>
 ```
 
 Then simply add this script to a parent game object which houses all of the particular screen UI elements and in Editor add enum values to `Active On Screens` array of this behavior. This object will then be activated or disabled based on the navigation system's current screen via `GameObject.SetActive()`.
+
+## AspectRatioFitterLayout usage
+
+This behavior works very similarly to AspectRatioFitter however it plays nice with Layout Element behavior by setting the preferred width or height on it instead of setting the actual width or height of RectTransform.

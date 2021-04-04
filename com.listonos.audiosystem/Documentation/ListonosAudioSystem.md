@@ -1,6 +1,6 @@
 # Listonos' Audio System
 
-Listonos' Audio System is a wrapper around Unity Audio System that comes with two default channels, music and sfx, and allows queueing up audio clips. It is intended for kickstarting a game dev jam projects.
+Listonos' Audio System is a wrapper around Unity Audio System that comes with two default channels, music and sfx, and allows queueing up audio clips. It is intended for kick-starting a game dev jam projects.
 
 ## Usage
 
