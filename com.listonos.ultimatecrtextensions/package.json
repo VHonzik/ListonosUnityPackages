@@ -1,0 +1,17 @@
+{
+  "name": "com.listonos.ultimatecrtextensions",
+  "version": "0.0.0",
+  "displayName": "Listonos' Ultimate CRT Extensions",
+  "description": "Extensions to the amazing Ultimate CRT package by Łukasz Łazarecki.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {
+ },
+ "keywords": [
+    "ultimatecrt"
+  ],
+  "author": {
+    "name": "Vaclav Honzik",
+    "email": "honzik.vaclav@gmail.com"
+  }
+}
