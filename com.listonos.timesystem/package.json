@@ -6,7 +6,8 @@
   "unity": "2020.3",
   "unityRelease": "0f1",
   "dependencies": {
-    "com.unity.textmeshpro": "3.0.1"
+    "com.unity.textmeshpro": "3.0.1",
+    "com.listonos.ui": "0.0.1"
  },
  "keywords": [
     "time"

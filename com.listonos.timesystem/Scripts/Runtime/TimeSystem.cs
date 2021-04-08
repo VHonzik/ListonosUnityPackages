@@ -43,6 +43,11 @@ namespace Listonos.TimeSystem
     public RepeatedTimeCallbackDelegate callback;
   }
 
+  public class TimePassageChangedEventArgs : EventArgs
+  {
+    public TimePassage TimePassage { get; set; }
+  }
+
   public class TimeSystem : SingletonMonoBehaviour<TimeSystem>
   {
     public DateTimeTicksWrapper StartingTime;
@@ -85,6 +90,7 @@ namespace Listonos.TimeSystem
         if (value != timePassage)
         {
           timePassage = value;
+          TimePassageChanged?.Invoke(this, new TimePassageChangedEventArgs() { TimePassage = TimePassage });
         }
       }
     }
@@ -105,6 +111,8 @@ namespace Listonos.TimeSystem
         }
       }
     }
+
+    public event EventHandler<TimePassageChangedEventArgs> TimePassageChanged;
 
     public void Start()
     {

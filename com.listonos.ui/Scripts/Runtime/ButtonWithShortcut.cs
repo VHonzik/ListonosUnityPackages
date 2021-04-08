@@ -9,12 +9,13 @@ namespace Listonos.UI
 
     public TMPro.TextMeshProUGUI ShortcutText;
 
+    private Button Button;
+    private UnityEngine.UI.Button UnityButton;
+
     private RectTransform ShortcutTextTransform;
     private Vector2 NormalShortcutAnchoredPosition;
     private Vector2 PressedShortcutAnchoredPosition;
 
-    private Button Button;
-    private UnityEngine.UI.Button UnityButton;
 
     void Start()
     {
@@ -37,12 +38,12 @@ namespace Listonos.UI
       }
 
       Button = GetComponent<Button>();
-      Debug.AssertFormat(Button != null, "ButtonWithShortcut behavior should be coupled with Button behavior.");
+      Debug.AssertFormat(Button != null, "ButtonWithShortcut behavior should be coupled with Button behavior  on the same game object.");
       Button.PressOffsetApplied += Button_PressOffsetApplied;
       Button.PressOffsetRemoved += Button_PressOffsetRemoved;
 
       UnityButton = GetComponent<UnityEngine.UI.Button>();
-      Debug.AssertFormat(Button != null, "ButtonWithShortcut behavior should be coupled with Unity's Button behavior.");
+      Debug.AssertFormat(UnityButton != null, "ButtonWithShortcut behavior should be coupled with Unity's Button behavior on the same game object.");
     }
 
     private void Button_PressOffsetApplied(object sender, Button.PressOffsetEventArgs e)

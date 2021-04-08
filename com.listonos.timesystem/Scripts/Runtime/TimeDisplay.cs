@@ -6,8 +6,11 @@ namespace Listonos.TimeSystem
   public class TimeDisplay : MonoBehaviour
   {
     public TMPro.TextMeshProUGUI Text;
-    [Tooltip("Format to display the time with. Uses .NET date and time format strings internally.")]
-    public string Format = "--MM-dd HH:mm:ss";
+    [Tooltip("How to format the time. Formatted with `DateTime.ToString(Format)`. Can be empty in which case `DateTime.ToString()` is used for formatting.")]
+    public string Format = "--MM-dd HH:mm";
+
+    [Tooltip("How to format the result of the Format parameter when the time is paused. The result is formatted with `string.Format(PausedFormat, result)`. Can be empty in which case it is ignored.")]
+    public string PausedFormat = "(Paused) {0}";
 
     private DateTime displayedTime;
     public DateTime DisplayedTime
@@ -21,13 +24,19 @@ namespace Listonos.TimeSystem
         if (value != displayedTime)
         {
           displayedTime = value;
-          if (Format.Length == 0)
+          if (Format.Length != 0)
           {
-            Text.text = DisplayedTime.ToString();
+            var text = DisplayedTime.ToString(Format);
+            if (TimeSystem.Instance.TimePassage == TimePassage.Paused && PausedFormat.Length != 0)
+            {
+              text = string.Format(PausedFormat, text);
+            }
+
+            Text.text = text;
           }
           else
           {
-            Text.text = DisplayedTime.ToString(Format);
+            Text.text = DisplayedTime.ToString();
           }
         }
       }
