@@ -2,7 +2,7 @@
 
 namespace Listonos.NavigationSystem
 {
-  public class NavigationSystem<T> : Singleton<NavigationSystem<T>> where T : Enum
+  public class NavigationSystem<T> : Singleton<NavigationSystem<T>> where T : struct
   {
     public class ScreenChangedEventArgs : EventArgs
     {

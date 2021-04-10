@@ -5,7 +5,9 @@ Small and personal Unity packages for kickstarting Unity 2D projects.
 
 ### UI
 
-Drop-in UI elements prefabs that use excellent [Kenney Assets](https://www.kenney.nl/assets) sprites and fonts. Some of them also wrap the Unity UI scripts with additional functionality. Additionally, this package includes a tiny generic navigation system that allows to enable or disable hierarchy of UI objects based on user defined enum type.
+Drop-in UI elements prefabs that use excellent [Kenney Assets](https://www.kenney.nl/assets) sprites and fonts. Some of them also wrap the Unity UI scripts with additional functionality.
+
+Additionally, this package includes a tiny generic navigation system that allows to enable or disable hierarchy of UI objects based on user defined enum type.
 
 ![UI elements preview](com.listonos.ui/Documentation/UIElementsPreview.PNG)
 
@@ -28,6 +30,10 @@ Main Menu:
 
 Credits:
 ![Jam Menu - Credits Menu](com.listonos.jammenu/Documentation/CreditsPreview.png)
+
+### Ultimate CRT Extensions
+
+Tiny script that extends [Ultimate CRT package](https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/ultimate-crt-80048) to supports outputting Ultimate CRT effects to render texture. Note that the `Ultimate CRT` package is not part of this package and it must be bought from Assert Store and imported into a project for this package to work.
 
 ## How to Install
 

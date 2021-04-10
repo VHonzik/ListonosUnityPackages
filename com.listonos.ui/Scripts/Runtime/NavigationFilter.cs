@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Listonos.NavigationSystem
 {
-  public class NavigationFilter<T> : MonoBehaviour where T : System.Enum
+  public class NavigationFilter<T> : MonoBehaviour where T : struct
   {
     public T[] ActiveOnScreens;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
       var navigationSystem = NavigationSystem<T>.Instance;
       if (!ActiveOnScreens.Contains(navigationSystem.CurrentScreen))
