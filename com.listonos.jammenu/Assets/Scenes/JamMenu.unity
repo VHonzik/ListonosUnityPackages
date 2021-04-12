@@ -226,6 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef58a43e03c5f8248a71c606057807b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NavigationSystem: {fileID: 0}
   ActiveOnScreens: 02000000
 --- !u!224 &268411701
 RectTransform:
@@ -1432,6 +1433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameSceneName: 
+  NavigationSystem: {fileID: 1553656947}
   ExitShortcut: 27
   MainMenuMusic: {fileID: 0}
 --- !u!114 &953747593
@@ -1446,6 +1448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef58a43e03c5f8248a71c606057807b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NavigationSystem: {fileID: 0}
   ActiveOnScreens: 00000000
 --- !u!1 &1022367886
 GameObject:
@@ -2089,6 +2092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FullscreenToggle: {fileID: 876877567}
+  NavigationSystem: {fileID: 1553656947}
   SfxVolumeTestClip: {fileID: 8300000, guid: d6b7337b53e0bd242ad8597343c336bb, type: 3}
   MusicVolumeTestClip: {fileID: 8300000, guid: ae9b4f0a1d427b04f85fa63c13d9826f, type: 3}
 --- !u!114 &1267430092
@@ -2103,6 +2107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef58a43e03c5f8248a71c606057807b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NavigationSystem: {fileID: 0}
   ActiveOnScreens: 01000000
 --- !u!1 &1274049464
 GameObject:
@@ -2298,6 +2303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 268411701}
+  - component: {fileID: 1553656947}
   m_Layer: 5
   m_Name: JamMenuRoot
   m_TagString: Untagged
@@ -2305,6 +2311,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1553656947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553656946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cda8db6ae3948134ba53b0cd3b575cd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitialScreen: 0
 --- !u!1 &1604829904
 GameObject:
   m_ObjectHideFlags: 0

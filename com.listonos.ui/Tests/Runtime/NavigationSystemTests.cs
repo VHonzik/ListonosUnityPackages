@@ -14,19 +14,36 @@ namespace Listonos.NavigationSystem.Tests
   {
   };
 
+  public class NavigationScreenSystem : NavigationSystem<NavigationScreen>
+  {
+  };
+
   public class NavigationSystemTests
   {
     [Test]
     public void EnumAndIntInstance()
     {
-      Assert.NotNull(NavigationSystem<int>.Instance);
-      Assert.NotNull(NavigationSystem<NavigationScreen>.Instance);
+      var intInstanceGO = new GameObject();
+      var intInstance = intInstanceGO.AddComponent<NavigationSystemInt>();
+      Assert.NotNull(intInstance);
+      intInstance.InitialScreen = 1;
+      intInstance.Start();
+      Assert.AreEqual(intInstance.CurrentScreen, 1);
+
+      var enumInstanceGO = new GameObject();
+      var enumInstance = enumInstanceGO.AddComponent<NavigationScreenSystem>();
+      Assert.NotNull(enumInstance);
+      enumInstance.InitialScreen = NavigationScreen.B;
+      enumInstance.Start();
+      Assert.AreEqual(enumInstance.CurrentScreen, NavigationScreen.B);
     }
 
     [Test]
     public void ScreenChangedEvent()
     {
-      var instance = NavigationSystem<NavigationScreen>.Instance;
+      var instanceGO = new GameObject();
+      var instance = instanceGO.AddComponent<NavigationScreenSystem>();
+
       instance.CurrentScreen = NavigationScreen.A;
       EventHandler<NavigationSystem<NavigationScreen>.ScreenChangedEventArgs> listener = (sender, eventArgs) =>
       {
@@ -44,21 +61,38 @@ namespace Listonos.NavigationSystem.Tests
     }
 
     [Test]
+    public void NavigationFilterSystemFind()
+    {
+      var instanceGO = new GameObject();
+      var instance = instanceGO.AddComponent<NavigationScreenSystem>();
+
+      var screenGO = new GameObject("Screen");
+      screenGO.transform.SetParent(instanceGO.transform);
+      var screenAFilter = screenGO.AddComponent<NavigationScreenFilter>();
+      screenAFilter.Awake();
+      Assert.AreEqual(screenAFilter.NavigationSystem, instance);
+    }
+
+    [Test]
     public void NavigationFilter()
     {
-      var instance = NavigationSystem<NavigationScreen>.Instance;
+      var instanceGO = new GameObject();
+      var instance = instanceGO.AddComponent<NavigationScreenSystem>();
       instance.CurrentScreen = NavigationScreen.A;
 
       var screenAGO = new GameObject("ScreenA");
       var screenAFilter = screenAGO.AddComponent<NavigationScreenFilter>();
+      screenAFilter.NavigationSystem = instance;
       screenAFilter.ActiveOnScreens = new[] { NavigationScreen.A };
 
       var screenBGO = new GameObject("ScreenB");
       var screenBFilter = screenBGO.AddComponent<NavigationScreenFilter>();
+      screenBFilter.NavigationSystem = instance;
       screenBFilter.ActiveOnScreens = new[] { NavigationScreen.B };
 
       var sharedScreenGO = new GameObject("SharedScreen");
       var sharedScreenFilter = sharedScreenGO.AddComponent<NavigationScreenFilter>();
+      sharedScreenFilter.NavigationSystem = instance;
       sharedScreenFilter.ActiveOnScreens = new[] { NavigationScreen.A, NavigationScreen.B };
 
       screenAFilter.Start();

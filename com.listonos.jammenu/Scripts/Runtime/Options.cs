@@ -10,6 +10,7 @@ namespace Listonos.JamMenu
   public class Options : MonoBehaviour
   {
     public UnityEngine.UI.Toggle FullscreenToggle;
+    public JamNavigationSystem NavigationSystem;
 
 #if LISTONOS_AUDIO_SYSTEM_PRESENT
     public AudioClip SfxVolumeTestClip;
@@ -68,7 +69,7 @@ namespace Listonos.JamMenu
 
     public void BackButtonPressed()
     {
-      NavigationSystem<NavigationScreen>.Instance.CurrentScreen = NavigationScreen.MainMenu;
+      NavigationSystem.CurrentScreen = JamNavigationScreen.MainMenu;
     }
   }
 }

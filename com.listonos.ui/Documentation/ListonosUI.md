@@ -4,46 +4,77 @@ Listonos' UI is a collection of UI elements and tools that is easy to use and lo
 
 ## UI elements usage
 
-Simply grab the prefabs from `Assets/Prefabs` and use them somewhere in UI hierarchy under UI Canvas object.
+Simply grab the prefabs from `Runtime/Assets/Prefabs` and use them somewhere in UI hierarchy under UI Canvas object.
 
-Note that if you want to disable Button and Button-derived elements through scripts, use the `Listonos.Buttons.Button.Interactible` property instead of the underlying Unity `Button.interactable`.
+Note that if you want to disable Button and Button-derived elements through scripts, use the `Listonos.UI.Button.Interactible` property instead of the underlying Unity `Button.interactable`.
 
 ## Navigation System usage
 
-Because we wnated users to provide their own `enum` for navigation screens for ease of use, this enum must lives in a different assembly. The navigation system is therefore using C# generic classes. Changing the current screen is easy, simply call the singleton passing your own enum type as generic argument:
+Navigation system is based on generic classes in order to provide user ability to set up one with user-defined enum (which therefore lives in a different assembly). There are two behaviors necessary to make Navigation System work, `NavigationSystem<>` and `NavigationFilter<>`. `Listonos.UI` package comes with ready-to-go behaviors for `int`-based Navigation System: `NavigationSystemInt` and appropriate `NavigationFilterInt`. In order to use user-defined enum you will only need couple of files with few lines of code:
 
 ```C#
+// MyNavigationScreen.cs or anywhere in the main, predefined, assembly
 using Listonos.NavigationSystem;
 
-// Somewhere in the main, predefined assembly, define enum with navigation screens
-public enum NavigationScreen
+public enum MyNavigationScreen
 {
   MainMenu,
   Credits
 }
+```
 
-// Anywhere in code when you need to change the current navigation screen, such when a menu button is pressed, call NavigationSystem singleton
-public class GameManager : MonoBehaviour
+```C#
+// MyNavigationFilter.cs
+using Listonos.NavigationSystem;
+
+public class MyNavigationFilter : NavigationFilter<MyNavigationScreen>
 {
-  // Connected to an UI button On Click event
-  public void MainMenuButtonPressed()
+}
+```
+
+```C#
+// MyNavigationSystem.cs
+using Listonos.NavigationSystem;
+
+public class MyNavigationSystem : NavigationSystem<MyNavigationScreen>
+{
+}
+```
+
+This package also provides custom editor for `NavigationSystem` that allows to quickly manipulate the hierarchy of `NavigationFilter`s. `NavigationFilterInt` has it built-in once again and for the above example you would need to add following lines to the `MyNavigationSystem.cs` if you want to use it:
+
+```C#
+[CustomEditor(typeof(MyNavigationSystem))]
+[CanEditMultipleObjects]
+public class MyNavigationSystemEditor : NavigationSystemEditor<MyNavigationScreen>
+{
+  public override MyNavigationScreen RenderValue()
   {
-    NavigationSystem<NavigationScreen>.Instance.CurrentScreen = NavigationScreen.MainMenu;
+    return (MyNavigationScreen)EditorGUILayout.EnumPopup(value);
   }
 }
 ```
 
-To use the provided `NavigationFilter` behavior with your own enum you will need to derive a class from it:
+In order to use Navigation System, you simply need a reference to it in your script and use the setter on `NavigationSystem<T>.CurrentScreen` property.
 
 ```C#
 using Listonos.NavigationSystem;
 
-public class NavigationScreenFilter : NavigationFilter<NavigationScreen>
+// Anywhere in code when you need to change the current navigation screen, such when a menu button is pressed, use NavigationSystem.CurrentScreen
+public class GameManager : MonoBehaviour
 {
+  public MyNavigationSystem NavigationSystem;
+
+  // Connected to an UI button On Click event
+  public void MainMenuButtonPressed()
+  {
+    NavigationSystem.CurrentScreen = MyNavigationScreen.MainMenu;
+  }
 }
 ```
 
-Then simply add this script to a parent game object which houses all of the particular screen UI elements and in Editor add enum values to `Active On Screens` array of this behavior. This object will then be activated or disabled based on the navigation system's current screen via `GameObject.SetActive()`.
+`NavigationSystemInt` or your `NavigationSystem<>`-derived behavior need to be somewhere at the top of canvas hierarchy so that all `NavigationFilter`s are their children. For example game object with root `Canvas` behavior is a good candidate. Then create "root" game objects for each screen with `NavigationFilter` attached. This object will then be activated or disabled via `GameObject.SetActive()` depending on whether navigation system's current screen is found in `NavigationFilter<>.ActiveOnScreens` array. `NavigationFilter` optionally accept `NavigationSystem` reference in a special cases such as when they are NOT descendants of `NavigationSystem`, however note that the custom editor won't work in that case.
+
 
 ## AspectRatioFitterLayout usage
 

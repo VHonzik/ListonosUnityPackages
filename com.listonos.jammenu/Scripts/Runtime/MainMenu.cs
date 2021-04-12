@@ -11,6 +11,7 @@ namespace Listonos.JamMenu
   public class MainMenu : MonoBehaviour
   {
     public string GameSceneName;
+    public JamNavigationSystem NavigationSystem;
 
     public KeyCode ExitShortcut = KeyCode.Escape;
 
@@ -52,7 +53,7 @@ namespace Listonos.JamMenu
 
     public void OptionsButtonPressed()
     {
-      NavigationSystem<NavigationScreen>.Instance.CurrentScreen = NavigationScreen.Options;
+      NavigationSystem.CurrentScreen = JamNavigationScreen.Options;
     }
 
     public void PlayButtonPressed()
