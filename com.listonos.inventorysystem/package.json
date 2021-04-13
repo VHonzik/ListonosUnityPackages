@@ -1,0 +1,17 @@
+{
+  "name": "com.listonos.inventorysystem",
+  "version": "0.0.0",
+  "displayName": "Listonos' Inventory System",
+  "description": "2D Sprite based inventory system.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "dependencies": {
+ },
+ "keywords": [
+    "inventorysystem"
+  ],
+  "author": {
+    "name": "Vaclav Honzik",
+    "email": "honzik.vaclav@gmail.com"
+  }
+}
