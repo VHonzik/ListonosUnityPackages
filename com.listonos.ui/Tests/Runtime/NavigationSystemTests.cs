@@ -63,14 +63,15 @@ namespace Listonos.NavigationSystem.Tests
     [Test]
     public void NavigationFilterSystemFind()
     {
-      var instanceGO = new GameObject();
+      var instanceGO = new GameObject("System");
       var instance = instanceGO.AddComponent<NavigationScreenSystem>();
 
       var screenGO = new GameObject("Screen");
       screenGO.transform.SetParent(instanceGO.transform);
-      var screenAFilter = screenGO.AddComponent<NavigationScreenFilter>();
-      screenAFilter.Awake();
-      Assert.AreEqual(screenAFilter.NavigationSystem, instance);
+      var screenFilter = screenGO.AddComponent<NavigationScreenFilter>();
+      screenFilter.ActiveOnScreens = new[] { NavigationScreen.A };
+      screenFilter.Start();
+      Assert.AreEqual(screenFilter.NavigationSystem, instance);
     }
 
     [Test]

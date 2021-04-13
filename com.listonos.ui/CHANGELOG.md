@@ -7,7 +7,8 @@
 - Added AspectRatioFitterLayout behavior
 - Added ButttonWithIcon prefab
 - Added unit tests for navigation system
-- Changed NavigationSystem to require struct instead of Enum to support, for example, int generic param
+- Added custom editor for NavigationSystem
 - Fixed UI spritesheet visual artifacts
+- Reorganized folder structure
 ## 0.0.0
 - First version of the package
