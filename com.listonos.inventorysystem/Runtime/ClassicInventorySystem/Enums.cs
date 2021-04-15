@@ -3,12 +3,8 @@
   public enum Slot
   {
     Bag,
-    LeftHand
-  }
-
-  public enum ItemType
-  {
-    Sword
+    LeftHand,
+    Head
   }
 
   public enum ItemQuality

@@ -23,7 +23,7 @@ namespace Listonos.InvetorySystem.Classic
   }
 
   [Serializable]
-  public class ItemDatum : ItemDatum<ItemQuality>
+  public class ItemDatum : ItemDatum<Slot, ItemQuality>
   {
   }
 

@@ -13,7 +13,7 @@
       ItemData.Init();
     }
 
-    public override ItemDatum<ItemQuality> GetItemDatum(string item)
+    public override ItemDatum<Slot, ItemQuality> GetItemDatum(string item)
     {
       return ItemData.GetDatum(item);
     }

@@ -75,6 +75,7 @@ namespace Listonos.InvetorySystem
     public bool ShowSprite;
     public Sprite NormalSprite;
     public Sprite DisabledSprite;
+    public bool AllowAllItems;
   }
 
   public abstract class ItemQualityDatum<ItemQualityEnum> : EnumKeyedDatum<ItemQualityEnum> where ItemQualityEnum : Enum
@@ -82,13 +83,20 @@ namespace Listonos.InvetorySystem
     public Sprite ItemBackgroundSprite;
   }
 
-  public abstract class ItemDatum<ItemQualityEnum> : StringKeyedDatum where ItemQualityEnum : Enum
+  public abstract class ItemDatum<SlotEnum, ItemQualityEnum> : StringKeyedDatum
+    where SlotEnum : Enum
+    where ItemQualityEnum : Enum
   {
     public ItemQualityEnum ItemQuality;
     public Sprite Sprite;
+    public bool HasItemSlot;
+    public SlotEnum ItemSlot;
+    public Vector2Int Size;
   }
 
-  public abstract class ItemData<ItemQualityEnum> : StringKeyedSerializedData<ItemDatum<ItemQualityEnum>> where ItemQualityEnum : Enum
+  public abstract class ItemData<SlotEnum, ItemQualityEnum> : StringKeyedSerializedData<ItemDatum<SlotEnum, ItemQualityEnum>>
+    where SlotEnum : Enum
+    where ItemQualityEnum : Enum
   {
   }
 }

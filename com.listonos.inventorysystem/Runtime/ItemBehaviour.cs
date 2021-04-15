@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Listonos.InvetorySystem
@@ -12,78 +14,129 @@ namespace Listonos.InvetorySystem
     public GameObject IconSprite;
     public GameObject BackgroundQualitySprite;
     public GameObject DragHighlighSprite;
-    public GameObject DetachParent;
+    public GameObject HoverSprite;
+    public Rigidbody2D Rigidbody;
 
-    public Rigidbody2D RigidBody;
+    public float HoverSpriteSizeAddition;
 
     public InventorySystem<SlotEnum, ItemQualityEnum> InventorySystem;
 
-    private ItemDatum<ItemQualityEnum> itemDatum;
+    public ItemDatum<SlotEnum, ItemQualityEnum> ItemDatum { get; private set; }
     private ItemQualityDatum<ItemQualityEnum> itemQualityDatum;
 
     private SpriteRenderer backgroundQualitySpriteRenderer;
 
     private Vector2 draggingOffset;
+    private Vector3 draggingStartPosition;
 
     // Start is called before the first frame update
     void Start()
     {
       Debug.AssertFormat(InventorySystem != null, "Slot behavior expects valid reference to InventorySystem behavior.");
-      itemDatum = InventorySystem.GetItemDatum(Item);
-      itemQualityDatum = InventorySystem.GetItemQualityDatum(itemDatum.ItemQuality);
+      ItemDatum = InventorySystem.GetItemDatum(Item);
+      itemQualityDatum = InventorySystem.GetItemQualityDatum(ItemDatum.ItemQuality);
+
+      InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
+      InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
 
       Debug.AssertFormat(IconSprite != null, "Item behavior expects valid reference to IconSprite game object.");
       Debug.AssertFormat(BackgroundQualitySprite != null, "Item behavior expects valid reference to BackgroundQualitySprite game object.");
       Debug.AssertFormat(DragHighlighSprite != null, "Item behavior expects valid reference to DragHighlighSprite game object.");
+      Debug.AssertFormat(HoverSprite != null, "Slot behavior expects valid reference to HoverSprite game object.");
 
       IconSprite.SetActive(true);
       BackgroundQualitySprite.SetActive(true);
       backgroundQualitySpriteRenderer = BackgroundQualitySprite.GetComponent<SpriteRenderer>();
       backgroundQualitySpriteRenderer.sprite = itemQualityDatum.ItemBackgroundSprite;
+      backgroundQualitySpriteRenderer.size = ItemDatum.Size;
+      var dragHighlighSpriteRenderer = DragHighlighSprite.GetComponent<SpriteRenderer>();
+      dragHighlighSpriteRenderer.size = ItemDatum.Size;
       DragHighlighSprite.SetActive(false);
+      var hoverSpriteRenderer = HoverSprite.GetComponent<SpriteRenderer>();
+      hoverSpriteRenderer.size = new Vector2(ItemDatum.Size.x, ItemDatum.Size.y) + Vector2.one * HoverSpriteSizeAddition;
+      HoverSprite.SetActive(false);
+    }
 
-      RigidBody.simulated = false;
+    void OnMouseEnter()
+    {
+      if (!InventorySystem.DraggingItem)
+      {
+        HoverSprite.SetActive(true);
+      }
+    }
+
+    void OnMouseExit()
+    {
+      if (!InventorySystem.DraggingItem)
+      {
+        HoverSprite.SetActive(false);
+      }
+    }
+
+    void OnMouseDown()
+    {
+      InventorySystem.StartDraggingItem(this);
+      StartDragging(Input.mousePosition);
+    }
+
+    void OnMouseDrag()
+    {
+      Dragging(Input.mousePosition);
+    }
+
+    void OnMouseUp()
+    {
+      InventorySystem.StopDraggingItem(this);
+      StopDragging();
     }
 
     public void StartDragging(Vector3 mousePosition)
     {
-      Vector2 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
-      Vector2 ourWorldPosition = DetachParent.transform.position;
+      HoverSprite.SetActive(false);
+      draggingStartPosition = transform.position;
+      Vector2 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+      Vector2 ourWorldPosition = transform.position;
       draggingOffset = ourWorldPosition - worldMousePosition;
       DragHighlighSprite.SetActive(true);
-      RigidBody.simulated = true;
     }
 
     public void StopDragging()
     {
       DragHighlighSprite.SetActive(false);
-      DetachParent.transform.localPosition = Vector3.zero;
-      RigidBody.simulated = false;
-    } 
+    }
 
     public void Dragging(Vector3 mousePosition)
     {
-      Vector2 worldMousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
-      DetachParent.transform.position = worldMousePosition + draggingOffset;
+      Vector2 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+      transform.position = worldMousePosition + draggingOffset;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    public void ResetPositionToStartDrag()
     {
-      var collidedObject = collision.gameObject;
-      var collidingSlot = collidedObject.GetComponent<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
-      if (collidingSlot)
+      transform.position = draggingStartPosition;
+    }
+
+    public void SetPositionToSlots(List<SlotBehaviour<SlotEnum, ItemQualityEnum>> slots)
+    {
+      var averagePosition = slots.Aggregate(Vector3.zero, (positionSum, slot) =>
       {
-        InventorySystem.ItemBeginOverlapWithSlot(collidingSlot, this);
+        return positionSum + slot.transform.position;
+      });
+      transform.position = averagePosition / slots.Count;
+    }
+    private void InventorySystem_ItemStartedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
+    {
+      if (e.ItemBehaviour != this)
+      {
+        Rigidbody.simulated = false;
       }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void InventorySystem_ItemStoppedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
-      var collidedObject = collision.gameObject;
-      var collidingSlot = collidedObject.GetComponent<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
-      if (collidingSlot)
+      if (e.ItemBehaviour != this)
       {
-        InventorySystem.ItemStoppedOverlapWithSlot(collidingSlot, this);
+        Rigidbody.simulated = true;
       }
     }
   }

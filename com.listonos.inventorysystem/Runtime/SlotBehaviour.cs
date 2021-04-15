@@ -11,10 +11,9 @@ namespace Listonos.InvetorySystem
     public SlotEnum Slot;
     public InventorySystem<SlotEnum, ItemQualityEnum> InventorySystem;
 
-    public GameObject HoverSprite;
     public GameObject SlotTypeSprite;
     public GameObject DropHighlightSprite;
-    public ItemBehaviour<SlotEnum, ItemQualityEnum> Item;
+    public Rigidbody2D Rigidbody;
 
     private SpriteRenderer slotTypeSpriteRenderer;
     private SlotDatum<SlotEnum> slotDatum;
@@ -23,9 +22,9 @@ namespace Listonos.InvetorySystem
     {
       Debug.AssertFormat(InventorySystem != null, "Slot behavior expects valid reference to InventorySystem behavior.");
       InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
+      InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
       slotDatum = InventorySystem.GetSlotDatum(Slot);
 
-      Debug.AssertFormat(HoverSprite != null, "Slot behavior expects valid reference to HoverSprite game object.");
       Debug.AssertFormat(SlotTypeSprite != null, "Slot behavior expects valid reference to SlotTypeSprite game object.");
       Debug.AssertFormat(DropHighlightSprite != null, "Slot behavior expects valid reference to DropHighlightSprite game object.");
 
@@ -39,81 +38,79 @@ namespace Listonos.InvetorySystem
       {
         SlotTypeSprite.SetActive(false);
       }
-      
-      HoverSprite.SetActive(false);
+
       DropHighlightSprite.SetActive(false);
+      Rigidbody.simulated = false;
     }
 
-    void OnMouseEnter()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-      if (!InventorySystem.DraggingItem)
+      var collidedObject = collision.gameObject;
+      var collidingItem = collidedObject.GetComponent<ItemBehaviour<SlotEnum, ItemQualityEnum>>();
+      if (collidingItem)
       {
-        HoverSprite.SetActive(true);
-      }      
-    }
-
-    void OnMouseExit()
-    {
-      if (!InventorySystem.DraggingItem)
-      {
-        HoverSprite.SetActive(false);
+        InventorySystem.ItemBeginOverlapWithSlot(this,  collidingItem);
       }
     }
 
-    void OnMouseDown()
+    void OnTriggerExit2D(Collider2D collision)
     {
-      if (Item)
+      var collidedObject = collision.gameObject;
+      var collidingItem = collidedObject.GetComponent<ItemBehaviour<SlotEnum, ItemQualityEnum>>();
+      if (collidingItem)
       {
-        InventorySystem.StartDraggingItem(this, Item);
+        InventorySystem.ItemStoppedOverlapWithSlot(this, collidingItem);
       }
     }
 
-    void OnMouseDrag()
-    {
-      if (Item)
-      {
-        InventorySystem.ContinueDraggingItem(this, Item);
-      }
-    }
-
-    void OnMouseUp()
-    {
-      if (Item)
-      {
-        InventorySystem.StopDraggingItem(this, Item);
-      }
-    }
-
-    public void ItemEnteredDrop(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
+    public void ItemEnteredDrop()
     {
       DropHighlightSprite.SetActive(true);
     }
 
-    public void ItemExitedDrop(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
+    public void ItemExitedDrop()
     {
       DropHighlightSprite.SetActive(false);
     }
 
-    public void RemoveItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
+    public bool AcceptsItem(ItemDatum<SlotEnum, ItemQualityEnum> itemDatum)
+    {
+      return slotDatum.AllowAllItems || (!slotDatum.AllowAllItems && itemDatum.HasItemSlot && Equals(Slot, itemDatum.ItemSlot));
+    }
+
+    public bool AcceptsItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
+    {
+      return AcceptsItem(item.ItemDatum);
+    }
+
+    public void RemoveItem()
     {
       DropHighlightSprite.SetActive(false);
-      Debug.Assert(Item == item);
-      Item = null;
     }
 
     public void DropItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
     {
       DropHighlightSprite.SetActive(false);
       item.transform.position = transform.position;
-      Item = item;
     }
 
     private void InventorySystem_ItemStartedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
-      if (e.sourceSlotBehavior == this)
+      Rigidbody.simulated = true;
+      if (slotDatum.ShowSprite && !AcceptsItem(e.ItemBehaviour))
       {
-        HoverSprite.SetActive(false);
+        slotTypeSpriteRenderer.sprite = slotDatum.DisabledSprite;
       }
+    }
+
+    private void InventorySystem_ItemStoppedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
+    {
+      Rigidbody.simulated = false;
+      if (slotDatum.ShowSprite && !AcceptsItem(e.ItemBehaviour))
+      {
+        slotTypeSpriteRenderer.sprite = slotDatum.NormalSprite;
+      }
+
     }
   }
 }
