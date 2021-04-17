@@ -9,12 +9,18 @@ namespace Listonos.InvetorySystem
   {
     public GameObject HoverSprite;
     public ItemBehaviour<SlotEnum, ItemQualityEnum> ItemBehaviour;
+    public bool ResizeSpriteToItemSize = true;
+    public float SizeAddition = 0.2f;
 
     private InventorySystem<SlotEnum, ItemQualityEnum> inventorySystem;
+    private SpriteRenderer hoverSpriteRenderer;
 
-    void Start()
+    void Awake()
     {
       Debug.AssertFormat(HoverSprite != null, "ItemHoverSprite behavior expects valid reference to HoverSprite game object.");
+      hoverSpriteRenderer = HoverSprite.GetComponent<SpriteRenderer>();
+      Debug.AssertFormat(hoverSpriteRenderer != null, "ItemHoverSprite behavior expects HoverSprite game object to have SpriteRenderer behavior.");
+
       Debug.AssertFormat(ItemBehaviour != null, "ItemHoverSprite behavior expects valid reference to ItemBehavior.");
 
       inventorySystem = ItemBehaviour.InventorySystem;
@@ -22,9 +28,11 @@ namespace Listonos.InvetorySystem
 
       inventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
       inventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
+      inventorySystem.AfterDataReady += InventorySystem_AfterDataReady;
+    }
 
-      // TODO add support for scaling with item size
-
+    void Start()
+    {
       HoverSprite.SetActive(false);
     }
 
@@ -57,6 +65,15 @@ namespace Listonos.InvetorySystem
       if (ReferenceEquals(e.ItemBehaviour, ItemBehaviour))
       {
         HoverSprite.SetActive(true);
+      }
+    }
+
+    private void InventorySystem_AfterDataReady(object sender, EventArgs e)
+    {
+      if (ResizeSpriteToItemSize)
+      {
+        Debug.AssertFormat(hoverSpriteRenderer.drawMode == SpriteDrawMode.Sliced, "ItemHoverSprite behavior has ResizeSpriteToItemSize set to true but the HoverSprite sprite renderer is not set to SpriteDrawMode.Sliced");
+        hoverSpriteRenderer.size = ItemBehaviour.ItemDatum.Size + Vector2.one * SizeAddition;
       }
     }
   }

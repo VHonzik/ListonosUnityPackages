@@ -10,20 +10,10 @@ namespace Listonos.InvetorySystem
     where ItemQualityEnum : Enum
   {
     public string Item;
-
-    public GameObject IconSprite;
-    public GameObject BackgroundQualitySprite;
-    public GameObject DragHighlighSprite;
     public Rigidbody2D Rigidbody;
-
-    public float HoverSpriteSizeAddition;
-
     public InventorySystem<SlotEnum, ItemQualityEnum> InventorySystem;
 
     public ItemDatum<SlotEnum, ItemQualityEnum> ItemDatum { get; private set; }
-    private ItemQualityDatum<ItemQualityEnum> itemQualityDatum;
-
-    private SpriteRenderer backgroundQualitySpriteRenderer;
 
     private Vector2 draggingOffset;
     private Vector3 draggingStartPosition;
@@ -34,18 +24,6 @@ namespace Listonos.InvetorySystem
       InventorySystem.DataReady += InventorySystem_DataReady;
       InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
       InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-      Debug.AssertFormat(IconSprite != null, "Item behavior expects valid reference to IconSprite game object.");
-      Debug.AssertFormat(BackgroundQualitySprite != null, "Item behavior expects valid reference to BackgroundQualitySprite game object.");
-      Debug.AssertFormat(DragHighlighSprite != null, "Item behavior expects valid reference to DragHighlighSprite game object.");
-
-      IconSprite.SetActive(true);
-      BackgroundQualitySprite.SetActive(true);
-      DragHighlighSprite.SetActive(false);
     }
 
     void OnMouseDown()
@@ -62,7 +40,6 @@ namespace Listonos.InvetorySystem
     void OnMouseUp()
     {
       InventorySystem.StopDraggingItem(this);
-      StopDragging();
     }
 
     public void StartDragging(Vector3 mousePosition)
@@ -71,12 +48,6 @@ namespace Listonos.InvetorySystem
       Vector2 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
       Vector2 ourWorldPosition = transform.position;
       draggingOffset = ourWorldPosition - worldMousePosition;
-      DragHighlighSprite.SetActive(true);
-    }
-
-    public void StopDragging()
-    {
-      DragHighlighSprite.SetActive(false);
     }
 
     public void Dragging(Vector3 mousePosition)
@@ -122,13 +93,6 @@ namespace Listonos.InvetorySystem
     private void InventorySystem_DataReady(object sender, EventArgs e)
     {
       ItemDatum = InventorySystem.GetItemDatum(Item);
-      itemQualityDatum = InventorySystem.GetItemQualityDatum(ItemDatum.ItemQuality);
-
-      backgroundQualitySpriteRenderer = BackgroundQualitySprite.GetComponent<SpriteRenderer>();
-      backgroundQualitySpriteRenderer.sprite = itemQualityDatum.ItemBackgroundSprite;
-      backgroundQualitySpriteRenderer.size = ItemDatum.Size;
-      var dragHighlighSpriteRenderer = DragHighlighSprite.GetComponent<SpriteRenderer>();
-      dragHighlighSpriteRenderer.size = ItemDatum.Size;
     }
   }
 }

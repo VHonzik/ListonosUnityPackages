@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 227483789300521979}
   - component: {fileID: 227483789300521976}
   m_Layer: 0
-  m_Name: DraggingSprite
+  m_Name: DragHighlightSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,6 +95,9 @@ GameObject:
   - component: {fileID: 2405125810805476865}
   - component: {fileID: 8364943725158952555}
   - component: {fileID: 6063769562694904842}
+  - component: {fileID: 1359907111078544137}
+  - component: {fileID: 3269757311718735994}
+  - component: {fileID: 3365385548047609904}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -133,11 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Item: 
-  IconSprite: {fileID: 227483789581418273}
-  BackgroundQualitySprite: {fileID: 227483790021371418}
-  DragHighlighSprite: {fileID: 227483789300521978}
   Rigidbody: {fileID: 2405125810805476865}
-  HoverSpriteSizeAddition: 0.3
   InventorySystem: {fileID: 0}
 --- !u!50 &2405125810805476865
 Rigidbody2D:
@@ -199,6 +198,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HoverSprite: {fileID: 2317540156591477784}
+  ItemBehaviour: {fileID: 6385000539497584524}
+  ResizeSpriteToItemSize: 0
+  SizeAddition: 0.2
+--- !u!114 &1359907111078544137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227483789545071713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a75b2dcf7098e33479a92db667a758bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DragHighlightSprite: {fileID: 227483789300521978}
+  ItemBehaviour: {fileID: 6385000539497584524}
+  ResizeSpriteToItemSize: 0
+--- !u!114 &3269757311718735994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227483789545071713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb92677773a65f44819e1e94cbdbda4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemQualitySprite: {fileID: 227483790021371418}
+  ItemBehaviour: {fileID: 6385000539497584524}
+  ResizeSpriteToItemSize: 1
+--- !u!114 &3365385548047609904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227483789545071713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db05670dd9426949a11c39a7ac8c38b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IconSprite: {fileID: 227483789581418273}
   ItemBehaviour: {fileID: 6385000539497584524}
 --- !u!1 &227483789581418273
 GameObject:

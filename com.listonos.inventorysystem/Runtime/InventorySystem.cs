@@ -43,6 +43,7 @@ namespace Listonos.InvetorySystem
     public event EventHandler<ItemDragEventArgs> ItemStartedDragging;
     public event EventHandler<ItemDragEventArgs> ItemStoppedDragging;
     public event EventHandler DataReady;
+    public event EventHandler AfterDataReady;
 
     private Dictionary<SlotBehaviour<SlotEnum, ItemQualityEnum>, ItemBehaviour<SlotEnum, ItemQualityEnum>> slotToItemDictionary = new Dictionary<SlotBehaviour<SlotEnum, ItemQualityEnum>, ItemBehaviour<SlotEnum, ItemQualityEnum>>();
 
@@ -80,6 +81,7 @@ namespace Listonos.InvetorySystem
     public virtual void OnDataReady(EventArgs args)
     {
       DataReady?.Invoke(this, args);
+      AfterDataReady?.Invoke(this, args);
     }
 
     public ItemBehaviour<SlotEnum, ItemQualityEnum> GetItemInSlot(SlotBehaviour<SlotEnum, ItemQualityEnum> slotBehaviour)

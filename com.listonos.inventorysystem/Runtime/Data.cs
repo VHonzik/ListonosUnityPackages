@@ -78,7 +78,7 @@ namespace Listonos.InvetorySystem
 
   public abstract class ItemQualityDatum<ItemQualityEnum> : EnumKeyedDatum<ItemQualityEnum> where ItemQualityEnum : Enum
   {
-    public Sprite ItemBackgroundSprite;
+    public Sprite Sprite;
   }
 
   public abstract class ItemDatum<SlotEnum, ItemQualityEnum> : StringKeyedDatum
