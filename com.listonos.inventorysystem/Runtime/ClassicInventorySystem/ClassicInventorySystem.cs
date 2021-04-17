@@ -1,17 +1,12 @@
-﻿namespace Listonos.InvetorySystem.Classic
+﻿using System;
+
+namespace Listonos.InvetorySystem.Classic
 {
   public class ClassicInventorySystem : InventorySystem<Slot, ItemQuality>
   {
     public SlotData SlotData;
     public ItemQualityData ItemQualityData;
     public ItemData ItemData;
-
-    public virtual void Awake()
-    {
-      SlotData.Init();
-      ItemQualityData.Init();
-      ItemData.Init();
-    }
 
     public override ItemDatum<Slot, ItemQuality> GetItemDatum(string item)
     {
@@ -26,6 +21,13 @@
     public override SlotDatum<Slot> GetSlotDatum(Slot slot)
     {
       return SlotData.GetDatum(slot);
+    }
+
+    public override void LoadData()
+    {
+      SlotData.Init();
+      ItemQualityData.Init();
+      ItemData.Init();
     }
   }
 }

@@ -33,7 +33,7 @@ namespace Listonos.InvetorySystem
 
     public Datum GetDatum(Key key)
     {
-      Debug.AssertFormat(dataDict.ContainsKey(key), "Did not find visuals for key {0} in EnumVisuals.", key.ToString());
+      Debug.AssertFormat(dataDict.ContainsKey(key), "Did not find datum for key {0} in EnumKeyedSerializedData.", key.ToString());
       if (!dataDict.ContainsKey(key))
       {
         return DefaultData;
@@ -60,7 +60,7 @@ namespace Listonos.InvetorySystem
 
     public Datum GetDatum(string key)
     {
-      Debug.AssertFormat(dataDict.ContainsKey(key), "Did not find visuals for key {0} in EnumVisuals.", key);
+      Debug.AssertFormat(dataDict.ContainsKey(key), "Did not find datum for key {0} in StringKeyedSerializedData.", key);
       if (!dataDict.ContainsKey(key))
       {
         return DefaultData;
@@ -72,10 +72,8 @@ namespace Listonos.InvetorySystem
 
   public abstract class SlotDatum<SlotEnum> : EnumKeyedDatum<SlotEnum> where SlotEnum : Enum
   {
-    public bool ShowSprite;
-    public Sprite NormalSprite;
-    public Sprite DisabledSprite;
     public bool AllowAllItems;
+    public Vector2Int Size;
   }
 
   public abstract class ItemQualityDatum<ItemQualityEnum> : EnumKeyedDatum<ItemQualityEnum> where ItemQualityEnum : Enum

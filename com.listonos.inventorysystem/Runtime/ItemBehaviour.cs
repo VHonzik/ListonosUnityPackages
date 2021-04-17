@@ -14,7 +14,6 @@ namespace Listonos.InvetorySystem
     public GameObject IconSprite;
     public GameObject BackgroundQualitySprite;
     public GameObject DragHighlighSprite;
-    public GameObject HoverSprite;
     public Rigidbody2D Rigidbody;
 
     public float HoverSpriteSizeAddition;
@@ -29,48 +28,24 @@ namespace Listonos.InvetorySystem
     private Vector2 draggingOffset;
     private Vector3 draggingStartPosition;
 
+    void Awake()
+    {
+      Debug.AssertFormat(InventorySystem != null, "Slot behavior expects valid reference to InventorySystem behavior.");
+      InventorySystem.DataReady += InventorySystem_DataReady;
+      InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
+      InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-      Debug.AssertFormat(InventorySystem != null, "Slot behavior expects valid reference to InventorySystem behavior.");
-      ItemDatum = InventorySystem.GetItemDatum(Item);
-      itemQualityDatum = InventorySystem.GetItemQualityDatum(ItemDatum.ItemQuality);
-
-      InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
-      InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
-
       Debug.AssertFormat(IconSprite != null, "Item behavior expects valid reference to IconSprite game object.");
       Debug.AssertFormat(BackgroundQualitySprite != null, "Item behavior expects valid reference to BackgroundQualitySprite game object.");
       Debug.AssertFormat(DragHighlighSprite != null, "Item behavior expects valid reference to DragHighlighSprite game object.");
-      Debug.AssertFormat(HoverSprite != null, "Slot behavior expects valid reference to HoverSprite game object.");
 
       IconSprite.SetActive(true);
       BackgroundQualitySprite.SetActive(true);
-      backgroundQualitySpriteRenderer = BackgroundQualitySprite.GetComponent<SpriteRenderer>();
-      backgroundQualitySpriteRenderer.sprite = itemQualityDatum.ItemBackgroundSprite;
-      backgroundQualitySpriteRenderer.size = ItemDatum.Size;
-      var dragHighlighSpriteRenderer = DragHighlighSprite.GetComponent<SpriteRenderer>();
-      dragHighlighSpriteRenderer.size = ItemDatum.Size;
       DragHighlighSprite.SetActive(false);
-      var hoverSpriteRenderer = HoverSprite.GetComponent<SpriteRenderer>();
-      hoverSpriteRenderer.size = new Vector2(ItemDatum.Size.x, ItemDatum.Size.y) + Vector2.one * HoverSpriteSizeAddition;
-      HoverSprite.SetActive(false);
-    }
-
-    void OnMouseEnter()
-    {
-      if (!InventorySystem.DraggingItem)
-      {
-        HoverSprite.SetActive(true);
-      }
-    }
-
-    void OnMouseExit()
-    {
-      if (!InventorySystem.DraggingItem)
-      {
-        HoverSprite.SetActive(false);
-      }
     }
 
     void OnMouseDown()
@@ -92,7 +67,6 @@ namespace Listonos.InvetorySystem
 
     public void StartDragging(Vector3 mousePosition)
     {
-      HoverSprite.SetActive(false);
       draggingStartPosition = transform.position;
       Vector2 worldMousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
       Vector2 ourWorldPosition = transform.position;
@@ -124,6 +98,11 @@ namespace Listonos.InvetorySystem
       });
       transform.position = averagePosition / slots.Count;
     }
+    public Vector2 GetPosition()
+    {
+      return transform.position;
+    }
+
     private void InventorySystem_ItemStartedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
       if (e.ItemBehaviour != this)
@@ -138,6 +117,18 @@ namespace Listonos.InvetorySystem
       {
         Rigidbody.simulated = true;
       }
+    }
+
+    private void InventorySystem_DataReady(object sender, EventArgs e)
+    {
+      ItemDatum = InventorySystem.GetItemDatum(Item);
+      itemQualityDatum = InventorySystem.GetItemQualityDatum(ItemDatum.ItemQuality);
+
+      backgroundQualitySpriteRenderer = BackgroundQualitySprite.GetComponent<SpriteRenderer>();
+      backgroundQualitySpriteRenderer.sprite = itemQualityDatum.ItemBackgroundSprite;
+      backgroundQualitySpriteRenderer.size = ItemDatum.Size;
+      var dragHighlighSpriteRenderer = DragHighlighSprite.GetComponent<SpriteRenderer>();
+      dragHighlighSpriteRenderer.size = ItemDatum.Size;
     }
   }
 }

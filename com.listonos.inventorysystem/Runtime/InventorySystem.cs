@@ -28,11 +28,10 @@ namespace Listonos.InvetorySystem
     public abstract SlotDatum<SlotEnum> GetSlotDatum(SlotEnum slot);
     public abstract ItemQualityDatum<ItemQualityEnum> GetItemQualityDatum(ItemQualityEnum itemQuality);
     public abstract ItemDatum<SlotEnum, ItemQualityEnum> GetItemDatum(string item);
+    public abstract void LoadData();
 
     public ItemBehaviour<SlotEnum, ItemQualityEnum> DraggedItem { get; private set; }
     public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> DraggingSources { get; private set; } = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
-
-    public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> DropTargets { get; private set; } = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
 
     public class ItemDragEventArgs : EventArgs
     {
@@ -43,13 +42,23 @@ namespace Listonos.InvetorySystem
 
     public event EventHandler<ItemDragEventArgs> ItemStartedDragging;
     public event EventHandler<ItemDragEventArgs> ItemStoppedDragging;
+    public event EventHandler DataReady;
 
     private Dictionary<SlotBehaviour<SlotEnum, ItemQualityEnum>, ItemBehaviour<SlotEnum, ItemQualityEnum>> slotToItemDictionary = new Dictionary<SlotBehaviour<SlotEnum, ItemQualityEnum>, ItemBehaviour<SlotEnum, ItemQualityEnum>>();
 
     private Dictionary<ItemBehaviour<SlotEnum, ItemQualityEnum>, List<SlotBehaviour<SlotEnum, ItemQualityEnum>>> itemToSlotsDictionary = new Dictionary<ItemBehaviour<SlotEnum, ItemQualityEnum>, List<SlotBehaviour<SlotEnum, ItemQualityEnum>>>();
 
-    void Start()
+    private ItemDropSolution<SlotEnum, ItemQualityEnum> itemDropSolution;
+
+    public virtual void Awake()
     {
+      LoadData();
+    }
+
+    public virtual void Start()
+    {
+      OnDataReady(new EventArgs());
+      itemDropSolution = new ItemDropSolution<SlotEnum, ItemQualityEnum>(this);
       foreach (var startingItem in StartingItemsPlacement)
       {
         foreach (var slotBehaviour in startingItem.Slots)
@@ -62,18 +71,53 @@ namespace Listonos.InvetorySystem
 
     void Update()
     {
-      if (DraggingItem && DropTargets.Count > 0)
+      if (DraggingItem)
       {
-        SortDropTargetsAndUpdateSlots();
+        itemDropSolution.Update();
       }
+    }
+
+    public virtual void OnDataReady(EventArgs args)
+    {
+      DataReady?.Invoke(this, args);
+    }
+
+    public ItemBehaviour<SlotEnum, ItemQualityEnum> GetItemInSlot(SlotBehaviour<SlotEnum, ItemQualityEnum> slotBehaviour)
+    {
+      ItemBehaviour<SlotEnum, ItemQualityEnum> item;
+      slotToItemDictionary.TryGetValue(slotBehaviour, out item);
+      return item;
+    }
+
+    public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> GetSlotsHavingItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
+    {
+      List<SlotBehaviour<SlotEnum, ItemQualityEnum>> slots;
+      itemToSlotsDictionary.TryGetValue(itemBehaviour, out slots);
+      return slots;
+    }
+
+    public bool ItemCanGoIntoSlot(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
+    {
+      var currentItemInSlot = GetItemInSlot(slot);
+      var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot);
+      var slotMatchCheck = (item.ItemDatum.HasItemSlot && Equals(item.ItemDatum.ItemSlot, slot.Slot));
+      var slotCheck = !item.ItemDatum.HasItemSlot || slot.SlotDatum.AllowAllItems || slotMatchCheck;
+      return occupiedCheck && slotCheck;
+    }
+
+    public bool ItemFitsSlotPerfectly(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
+    {
+      return item.ItemDatum.Size.x <= slot.SlotDatum.Size.x && item.ItemDatum.Size.y <= slot.SlotDatum.Size.y;
     }
 
     public void StartDraggingItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
     {
       DraggedItem = itemBehaviour;
+      itemDropSolution.RegisterItem(DraggedItem);
       if (itemToSlotsDictionary.ContainsKey(itemBehaviour))
       {
         DraggingSources = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(itemToSlotsDictionary[itemBehaviour]);
+        itemDropSolution.RegisterStartingSlots(DraggingSources);
       }
       ItemStartedDragging?.Invoke(this, new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = null });
     }
@@ -81,40 +125,38 @@ namespace Listonos.InvetorySystem
     public void StopDraggingItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
     {
       Debug.Assert(itemBehaviour == DraggedItem);
-      var eventArgs = new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = DropTargets };
+      var eventArgs = new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources };
 
-      var requiredSlots = itemBehaviour.ItemDatum.Size.x * itemBehaviour.ItemDatum.Size.y;
-      if (DropTargets.Count > 0 && DropTargets.Count >= requiredSlots)
+      if (itemDropSolution.HasSolution)
       {
         foreach (var draggingSource in DraggingSources)
         {
-          draggingSource.RemoveItem();
           slotToItemDictionary.Remove(draggingSource);
         }
 
-        var neededDropTargers = DropTargets.GetRange(0, requiredSlots);
+        var solutionSlots = itemDropSolution.GetSolutionSlots();
+        itemBehaviour.SetPositionToSlots(solutionSlots);
 
-        foreach (var dropTarget in neededDropTargers)
+        foreach (var solutionSlot in solutionSlots)
         {
-          dropTarget.DropItem(itemBehaviour);
-          slotToItemDictionary[dropTarget] = itemBehaviour;
+          slotToItemDictionary[solutionSlot] = itemBehaviour;
         }
 
-        itemToSlotsDictionary[itemBehaviour] = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(neededDropTargers);
+        itemToSlotsDictionary[itemBehaviour] = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
 
-        for (int i = DropTargets.Count-1; i >= requiredSlots; i--)
+        foreach (var slot in itemDropSolution.GetNotUsedSlots())
         {
-          ItemStoppedOverlapWithSlot(DropTargets[i], itemBehaviour);
+          ItemStoppedOverlapWithSlot(slot, itemBehaviour);
         }
 
-        itemBehaviour.SetPositionToSlots(neededDropTargers);
+        eventArgs.TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
       }
       else
       {
         itemBehaviour.ResetPositionToStartDrag();
-        for (int i = DropTargets.Count - 1; i >= 0; i--)
+        foreach (var slot in itemDropSolution.GetNotUsedSlots())
         {
-          ItemStoppedOverlapWithSlot(DropTargets[i], itemBehaviour);
+          ItemStoppedOverlapWithSlot(slot, itemBehaviour);
         }
       }
 
@@ -122,49 +164,22 @@ namespace Listonos.InvetorySystem
 
       DraggedItem = null;
       DraggingSources.Clear();
-      DropTargets.Clear();
+      itemDropSolution.Clear();
     }
 
     public void ItemBeginOverlapWithSlot(SlotBehaviour<SlotEnum, ItemQualityEnum> slotBehaviour, ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
     {
-      if (itemBehaviour == DraggedItem && (DraggingSources.Contains(slotBehaviour) || (slotBehaviour.AcceptsItem(itemBehaviour) && !slotToItemDictionary.ContainsKey(slotBehaviour))))
+      if (itemBehaviour == DraggedItem)
       {
-        Debug.Assert(!DropTargets.Contains(slotBehaviour));
-        DropTargets.Add(slotBehaviour);
-        SortDropTargetsAndUpdateSlots();
+        itemDropSolution.AddSlot(slotBehaviour);
       }
     }
 
     public void ItemStoppedOverlapWithSlot(SlotBehaviour<SlotEnum, ItemQualityEnum> slotBehaviour, ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
     {
-
-      if (itemBehaviour == DraggedItem && (DraggingSources.Contains(slotBehaviour) || (slotBehaviour.AcceptsItem(itemBehaviour) && !slotToItemDictionary.ContainsKey(slotBehaviour))))
+      if (itemBehaviour == DraggedItem)
       {
-        Debug.Assert(DropTargets.Contains(slotBehaviour));
-        DropTargets.Remove(slotBehaviour);
-        slotBehaviour.ItemExitedDrop();
-        SortDropTargetsAndUpdateSlots();
-      }
-    }
-    private void SortDropTargetsAndUpdateSlots()
-    {
-      DropTargets.Sort((slotA, slotB) =>
-      {
-        var aDistance = Vector2.Distance(slotA.transform.position, DraggedItem.transform.position);
-        var bDistance = Vector2.Distance(slotB.transform.position, DraggedItem.transform.position);
-        return aDistance.CompareTo(bDistance);
-      });
-
-      var requiredSlots = DraggedItem.ItemDatum.Size.x * DraggedItem.ItemDatum.Size.y;
-      var validSlotCount = Math.Min(requiredSlots, DropTargets.Count);
-      for (int i = 0; i < validSlotCount; i++)
-      {
-        DropTargets[i].ItemEnteredDrop();
-      }
-
-      for (int i = validSlotCount; i < DropTargets.Count; i++)
-      {
-        DropTargets[i].ItemExitedDrop();
+        itemDropSolution.RemoveSlot(slotBehaviour);
       }
     }
   }

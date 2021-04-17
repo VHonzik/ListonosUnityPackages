@@ -10,36 +10,28 @@ namespace Listonos.InvetorySystem
   {
     public SlotEnum Slot;
     public InventorySystem<SlotEnum, ItemQualityEnum> InventorySystem;
-
-    public GameObject SlotTypeSprite;
-    public GameObject DropHighlightSprite;
     public Rigidbody2D Rigidbody;
 
-    private SpriteRenderer slotTypeSpriteRenderer;
-    private SlotDatum<SlotEnum> slotDatum;
+    public SlotDatum<SlotEnum> SlotDatum { get; private set; }
+    public ISlotCollection<SlotEnum, ItemQualityEnum> Collection { get; set; } = null;
 
-    void Start()
+    public class DropHighlightChangedEventArgs : EventArgs
+    {
+      public bool HighlightWanted { get; set; }
+    }
+
+    public event EventHandler<DropHighlightChangedEventArgs> DropHighlightChanged;
+
+    void Awake()
     {
       Debug.AssertFormat(InventorySystem != null, "Slot behavior expects valid reference to InventorySystem behavior.");
       InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
       InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
-      slotDatum = InventorySystem.GetSlotDatum(Slot);
+      InventorySystem.DataReady += InventorySystem_DataReady;
+    }
 
-      Debug.AssertFormat(SlotTypeSprite != null, "Slot behavior expects valid reference to SlotTypeSprite game object.");
-      Debug.AssertFormat(DropHighlightSprite != null, "Slot behavior expects valid reference to DropHighlightSprite game object.");
-
-      if (slotDatum.ShowSprite)
-      {
-        SlotTypeSprite.SetActive(true);
-        slotTypeSpriteRenderer = SlotTypeSprite.GetComponent<SpriteRenderer>();
-        slotTypeSpriteRenderer.sprite = slotDatum.NormalSprite;
-      }
-      else
-      {
-        SlotTypeSprite.SetActive(false);
-      }
-
-      DropHighlightSprite.SetActive(false);
+    void Start()
+    {
       Rigidbody.simulated = false;
     }
 
@@ -63,54 +55,34 @@ namespace Listonos.InvetorySystem
       }
     }
 
-    public void ItemEnteredDrop()
+    public void ShowDropHighlight(object sender)
     {
-      DropHighlightSprite.SetActive(true);
+      DropHighlightChanged?.Invoke(sender, new DropHighlightChangedEventArgs() { HighlightWanted = true });
     }
 
-    public void ItemExitedDrop()
+    public void HideDropHighlight(object sender)
     {
-      DropHighlightSprite.SetActive(false);
+      DropHighlightChanged?.Invoke(sender, new DropHighlightChangedEventArgs() { HighlightWanted = false });
     }
 
-    public bool AcceptsItem(ItemDatum<SlotEnum, ItemQualityEnum> itemDatum)
+    public Vector2 GetPosition()
     {
-      return slotDatum.AllowAllItems || (!slotDatum.AllowAllItems && itemDatum.HasItemSlot && Equals(Slot, itemDatum.ItemSlot));
-    }
-
-    public bool AcceptsItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
-    {
-      return AcceptsItem(item.ItemDatum);
-    }
-
-    public void RemoveItem()
-    {
-      DropHighlightSprite.SetActive(false);
-    }
-
-    public void DropItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
-    {
-      DropHighlightSprite.SetActive(false);
-      item.transform.position = transform.position;
+      return transform.position;
     }
 
     private void InventorySystem_ItemStartedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
       Rigidbody.simulated = true;
-      if (slotDatum.ShowSprite && !AcceptsItem(e.ItemBehaviour))
-      {
-        slotTypeSpriteRenderer.sprite = slotDatum.DisabledSprite;
-      }
     }
 
     private void InventorySystem_ItemStoppedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
       Rigidbody.simulated = false;
-      if (slotDatum.ShowSprite && !AcceptsItem(e.ItemBehaviour))
-      {
-        slotTypeSpriteRenderer.sprite = slotDatum.NormalSprite;
-      }
+    }
 
+    private void InventorySystem_DataReady(object sender, EventArgs e)
+    {
+      SlotDatum = InventorySystem.GetSlotDatum(Slot);
     }
   }
 }

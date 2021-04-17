@@ -25,10 +25,13 @@ TextureImporter:
     second: TargetSlotHover
   - first:
       213: 5196601629890060765
-    second: InvetorySheet_7
+    second: Hover1
   - first:
       213: 8068694408112464971
-    second: InvetorySheet_8
+    second: Hover2
+  - first:
+      213: 5716846954096063178
+    second: BagSlotBackground
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -154,13 +157,13 @@ TextureImporter:
       name: ItemBackground
       rect:
         serializedVersion: 2
-        x: 89
+        x: 131
         y: 89
         width: 32
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 5, y: 6, z: 7, w: 12}
+      border: {x: 5, y: 8, z: 7, w: 12}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -175,8 +178,8 @@ TextureImporter:
       name: PickedItemBorder
       rect:
         serializedVersion: 2
-        x: 131
-        y: 89
+        x: 5
+        y: 47
         width: 32
         height: 32
       alignment: 0
@@ -196,7 +199,7 @@ TextureImporter:
       name: SwordSlot
       rect:
         serializedVersion: 2
-        x: 5
+        x: 47
         y: 47
         width: 32
         height: 32
@@ -217,7 +220,7 @@ TextureImporter:
       name: SwordSlotDisabled
       rect:
         serializedVersion: 2
-        x: 47
+        x: 89
         y: 47
         width: 32
         height: 32
@@ -238,8 +241,8 @@ TextureImporter:
       name: Sword
       rect:
         serializedVersion: 2
-        x: 89
-        y: 47
+        x: 4
+        y: 5
         width: 32
         height: 32
       alignment: 0
@@ -265,7 +268,7 @@ TextureImporter:
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 10, y: 11, z: 10, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -277,16 +280,16 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InvetorySheet_7
+      name: Hover1
       rect:
         serializedVersion: 2
-        x: 0
+        x: 42
         y: 0
         width: 42
         height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 4, y: 4, z: 4, w: 4}
+      border: {x: 14, y: 12, z: 10, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -298,22 +301,43 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: InvetorySheet_8
+      name: Hover2
       rect:
         serializedVersion: 2
-        x: 42
+        x: 84
         y: 0
         width: 42
         height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 4, y: 4, z: 4, w: 4}
+      border: {x: 14, y: 4, z: 8, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: b4469bc70d2c9ff60800000000000000
       internalID: 8068694408112464971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BagSlotBackground
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 89
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 12, y: 13, z: 13, w: 12}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ac27b2ef302565f40800000000000000
+      internalID: 5716846954096063178
       vertices: []
       indices: 
       edges: []
