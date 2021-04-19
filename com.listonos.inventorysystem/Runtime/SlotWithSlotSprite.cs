@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public class SlotWithSlotSprite<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum

@@ -13,10 +13,10 @@ TextureImporter:
     second: PickedItemBorder
   - first:
       213: -5317480307431843873
-    second: SwordSlot
+    second: MainHandSlot
   - first:
       213: 13933048330837806
-    second: SwordSlotDisabled
+    second: MainHandSlotDisabled
   - first:
       213: 2525815524767153913
     second: Sword
@@ -32,6 +32,63 @@ TextureImporter:
   - first:
       213: 5716846954096063178
     second: BagSlotBackground
+  - first:
+      213: -9115629934354946112
+    second: ItemBackgroundUncommon
+  - first:
+      213: -461346202662696625
+    second: OffhandSlot
+  - first:
+      213: 859238695253908780
+    second: OffhandSlotDisabled
+  - first:
+      213: -2346143319749412377
+    second: ChestSlot
+  - first:
+      213: 7269060497634873248
+    second: ChestSlotDisabled
+  - first:
+      213: -5680477005903909053
+    second: HealthPotion
+  - first:
+      213: -8618813161893132849
+    second: StaminaPotion
+  - first:
+      213: 886086705028596445
+    second: Staff
+  - first:
+      213: -2319975313243557337
+    second: ChestArmor
+  - first:
+      213: 6638065873107795960
+    second: Font0
+  - first:
+      213: 5914861724324199749
+    second: Font1
+  - first:
+      213: 6638512262568081045
+    second: Font2
+  - first:
+      213: 1216558220920360420
+    second: Font3
+  - first:
+      213: -7540694852223415629
+    second: Font4
+  - first:
+      213: 6858440464578043217
+    second: Font5
+  - first:
+      213: -7072876133325221258
+    second: Font6
+  - first:
+      213: -7336905309053038904
+    second: Font7
+  - first:
+      213: -6218502438121147760
+    second: Font8
+  - first:
+      213: 3130944934669637202
+    second: Font9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -137,7 +194,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 89
+        y: 173
         width: 32
         height: 32
       alignment: 0
@@ -158,12 +215,12 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 131
-        y: 89
+        y: 173
         width: 32
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 5, y: 8, z: 7, w: 12}
+      border: {x: 8, y: 8, z: 8, w: 12}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -179,7 +236,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5
-        y: 47
+        y: 131
         width: 32
         height: 32
       alignment: 0
@@ -196,11 +253,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SwordSlot
+      name: MainHandSlot
       rect:
         serializedVersion: 2
         x: 47
-        y: 47
+        y: 131
         width: 32
         height: 32
       alignment: 0
@@ -217,11 +274,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SwordSlotDisabled
+      name: MainHandSlotDisabled
       rect:
         serializedVersion: 2
         x: 89
-        y: 47
+        y: 131
         width: 32
         height: 32
       alignment: 0
@@ -241,8 +298,8 @@ TextureImporter:
       name: Sword
       rect:
         serializedVersion: 2
-        x: 4
-        y: 5
+        x: 131
+        y: 89
         width: 32
         height: 32
       alignment: 0
@@ -262,8 +319,8 @@ TextureImporter:
       name: TargetSlotHover
       rect:
         serializedVersion: 2
-        x: 131
-        y: 47
+        x: 89
+        y: 89
         width: 32
         height: 32
       alignment: 0
@@ -283,8 +340,8 @@ TextureImporter:
       name: Hover1
       rect:
         serializedVersion: 2
-        x: 42
-        y: 0
+        x: 126
+        y: 42
         width: 42
         height: 42
       alignment: 0
@@ -304,13 +361,13 @@ TextureImporter:
       name: Hover2
       rect:
         serializedVersion: 2
-        x: 84
-        y: 0
+        x: 168
+        y: 42
         width: 42
         height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 14, y: 4, z: 8, w: 4}
+      border: {x: 14, y: 12, z: 8, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -326,11 +383,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 89
-        y: 89
+        y: 173
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 12, y: 13, z: 13, w: 12}
       outline: []
       physicsShape: []
@@ -338,6 +395,405 @@ TextureImporter:
       bones: []
       spriteID: ac27b2ef302565f40800000000000000
       internalID: 5716846954096063178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ItemBackgroundUncommon
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 173
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 8, z: 8, w: 12}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c72bd21fd6ce7180800000000000000
+      internalID: -9115629934354946112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OffhandSlot
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 131
+        width: 32
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4980dfa218f899f0800000000000000
+      internalID: -461346202662696625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OffhandSlotDisabled
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 131
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2d11e77a01aceb00800000000000000
+      internalID: 859238695253908780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestSlot
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 89
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e93e22c413d07fd0800000000000000
+      internalID: -2346143319749412377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestSlotDisabled
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 89
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0afc95c6204e0e460800000000000000
+      internalID: 7269060497634873248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HealthPotion
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 89
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34fa2547244ea21b0800000000000000
+      internalID: -5680477005903909053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: StaminaPotion
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 47
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc506ebf713d36880800000000000000
+      internalID: -8618813161893132849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Staff
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 47
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd20d6dd9230c4c00800000000000000
+      internalID: 886086705028596445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestArmor
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 47
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 722317e8ebacdcfd0800000000000000
+      internalID: -2319975313243557337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 34
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ffbb3addb52f1c50800000000000000
+      internalID: 6638065873107795960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font1
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 34
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54df5e5666fc51250800000000000000
+      internalID: 5914861724324199749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 34
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 596f17ffabbb02c50800000000000000
+      internalID: 6638512262568081045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font3
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 34
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ed0a8e914512e010800000000000000
+      internalID: 1216558220920360420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font4
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 34
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ba4b95fbf11a5790800000000000000
+      internalID: -7540694852223415629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 26
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15dd654d3431e2f50800000000000000
+      internalID: 6858440464578043217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font6
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 26
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 672dfc461a818dd90800000000000000
+      internalID: -7072876133325221258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font7
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 26
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ce47377e731e2a90800000000000000
+      internalID: -7336905309053038904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font8
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 26
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 09273e4caf073b9a0800000000000000
+      internalID: -6218502438121147760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Font9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 26
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 256da4264d9537b20800000000000000
+      internalID: 3130944934669637202
       vertices: []
       indices: 
       edges: []

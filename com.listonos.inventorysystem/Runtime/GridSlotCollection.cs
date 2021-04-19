@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class GridSlotCollection<SlotEnum, ItemQualityEnum> : MonoBehaviour, ISlotCollection<SlotEnum, ItemQualityEnum>
     where SlotEnum : Enum

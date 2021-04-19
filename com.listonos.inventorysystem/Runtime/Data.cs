@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class EnumKeyedDatum<EnumKey> where EnumKey : Enum
   {
@@ -90,6 +90,8 @@ namespace Listonos.InvetorySystem
     public bool HasItemSlot;
     public SlotEnum ItemSlot;
     public Vector2Int Size;
+    public bool Stacks;
+    public int StackLimit;
   }
 
   public abstract class ItemData<SlotEnum, ItemQualityEnum> : StringKeyedSerializedData<ItemDatum<SlotEnum, ItemQualityEnum>>

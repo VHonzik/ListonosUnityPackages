@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class SlotDropHighlight<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum

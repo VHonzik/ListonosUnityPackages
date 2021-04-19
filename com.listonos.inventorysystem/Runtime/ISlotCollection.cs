@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public interface ISlotCollection<SlotEnum, ItemQualityEnum>
     where SlotEnum : Enum

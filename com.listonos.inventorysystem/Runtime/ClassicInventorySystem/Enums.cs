@@ -1,14 +1,16 @@
-﻿namespace Listonos.InvetorySystem.Classic
+﻿namespace Listonos.InventorySystem.Classic
 {
   public enum Slot
   {
     Bag,
-    LeftHand,
-    Head
+    MainHand,
+    OffHand,
+    Armor
   }
 
   public enum ItemQuality
   {
-    Common
+    Common,
+    Uncommon
   }
 }

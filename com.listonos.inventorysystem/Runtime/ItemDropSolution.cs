@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public class ItemDropSolution<SlotEnum, ItemQualityEnum>
     where SlotEnum : Enum
@@ -30,7 +30,16 @@ namespace Listonos.InvetorySystem
       }
     }
 
+    public bool IsCurrentSolutionStackingFit
+    {
+      get
+      {
+        return currentSolutionSlots.Count > 0 && inventorySystem.ItemStacksInSlot(item, currentSolutionSlots.First());
+      }
+    }
+
     private HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>> currentSolutionSlots = new HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
+    private HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>> validStackingSlots = new HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
     private HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>> validPerfectFitSlots = new HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
     private HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>> validPartialFitSlots = new HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
     private HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>> invalidSlots = new HashSet<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
@@ -48,13 +57,14 @@ namespace Listonos.InvetorySystem
 
     public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> GetNotUsedSlots()
     {
-      return validPerfectFitSlots.Concat(validPartialFitSlots).Concat(invalidSlots).ToList();
+      return validStackingSlots.Concat(validPerfectFitSlots).Concat(validPartialFitSlots).Concat(invalidSlots).ToList();
     }
 
     public void RegisterItem(ItemBehaviour<SlotEnum, ItemQualityEnum> item)
     {
       this.item = item;
       Debug.Assert(currentSolutionSlots.Count == 0);
+      Debug.Assert(validStackingSlots.Count == 0);
       Debug.Assert(validPerfectFitSlots.Count == 0);
       Debug.Assert(validPartialFitSlots.Count == 0);
       Debug.Assert(invalidSlots.Count == 0);
@@ -71,7 +81,7 @@ namespace Listonos.InvetorySystem
             slotCollections.Add(slot.Collection);
           }
 
-          // Portion of partial fit slots can combine with other slots
+          // Some of the partial fit slots can combine with other slots so keep them in partial fits as well
           if (!inventorySystem.ItemFitsSlotPerfectly(item, slot))
           {
             validPartialFitSlots.Add(slot);
@@ -87,7 +97,7 @@ namespace Listonos.InvetorySystem
     {
       Debug.Assert(item != null);
 
-      if (invalidSlots.Contains(slot) || validPerfectFitSlots.Contains(slot))
+      if (invalidSlots.Contains(slot) || validPerfectFitSlots.Contains(slot) || validStackingSlots.Contains(slot))
       {
         return;
       }
@@ -97,7 +107,12 @@ namespace Listonos.InvetorySystem
         slotCollections.Add(slot.Collection);
       }
 
-      if (!inventorySystem.ItemCanGoIntoSlot(item, slot))
+      if (inventorySystem.ItemStacksInSlot(item, slot))
+      {
+        validStackingSlots.Add(slot);
+        ConsiderValidSlotsForSolutionWithoutCacheUpdate();
+      }
+      else if (!inventorySystem.ItemCanGoIntoSlot(item, slot))
       {
         invalidSlots.Add(slot);
       }
@@ -149,6 +164,7 @@ namespace Listonos.InvetorySystem
         invalidSlots.Remove(slot);
         validPerfectFitSlots.Remove(slot);
         validPartialFitSlots.Remove(slot);
+        validStackingSlots.Remove(slot);
       }
     }
 
@@ -162,6 +178,7 @@ namespace Listonos.InvetorySystem
       currentSolutionSlots.Clear();
       validPerfectFitSlots.Clear();
       validPartialFitSlots.Clear();
+      validStackingSlots.Clear();
       invalidSlots.Clear();
     }
 
@@ -177,7 +194,11 @@ namespace Listonos.InvetorySystem
         foreach (var slot in currentSolutionSlots)
         {
           slot.HideDropHighlight(this);
-          if (inventorySystem.ItemFitsSlotPerfectly(item, slot))
+          if (inventorySystem.ItemStacksInSlot(item, slot))
+          {
+            validStackingSlots.Add(slot);
+          }
+          else if (inventorySystem.ItemFitsSlotPerfectly(item, slot))
           {
             validPerfectFitSlots.Add(slot);
           }
@@ -216,6 +237,39 @@ namespace Listonos.InvetorySystem
 
         foreach (var slot in currentSolutionSlots)
         {
+          slot.ShowDropHighlight(this);
+        }
+      }
+    }
+
+    private void UpdateStackingFitSolution()
+    {
+      var closestValidStackingSlot = GetClosestSlot(validStackingSlots, item);
+      if (IsCurrentSolutionStackingFit)
+      {
+        var closestCurrentSolutionSlot = GetClosestSlot(currentSolutionSlots, item);
+        if (CompareSlotsDistance(closestValidStackingSlot, closestCurrentSolutionSlot) < 0)
+        {
+          InvalidateCurrentSolution();
+          var currentItem = inventorySystem.GetItemInSlot(closestValidStackingSlot);
+          var slots = inventorySystem.GetSlotsHavingItem(currentItem);
+
+          foreach (var slot in slots)
+          {
+            currentSolutionSlots.Add(slot);
+            slot.ShowDropHighlight(this);
+          }
+        }
+      }
+      else
+      {
+        InvalidateCurrentSolution();
+        var currentItem = inventorySystem.GetItemInSlot(closestValidStackingSlot);
+        var slots = inventorySystem.GetSlotsHavingItem(currentItem);
+
+        foreach (var slot in slots)
+        {
+          currentSolutionSlots.Add(slot);
           slot.ShowDropHighlight(this);
         }
       }
@@ -286,6 +340,10 @@ namespace Listonos.InvetorySystem
       if (validPerfectFitSlots.Count > 0)
       {
         UpdatePerfectFitSolution();
+      }
+      else if (validStackingSlots.Count > 0)
+      {
+        UpdateStackingFitSolution();
       }
       else if (slotBlocksCandidates.Count > 0)
       {

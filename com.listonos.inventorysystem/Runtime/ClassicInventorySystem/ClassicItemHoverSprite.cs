@@ -1,4 +1,4 @@
-﻿namespace Listonos.InvetorySystem.Classic
+﻿namespace Listonos.InventorySystem.Classic
 {
   public class ClassicItemHoverSprite : ItemHoverSprite<Slot, ItemQuality>
   {

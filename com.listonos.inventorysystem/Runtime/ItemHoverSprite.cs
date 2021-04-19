@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public class ItemHoverSprite<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum
@@ -29,6 +29,7 @@ namespace Listonos.InvetorySystem
       inventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
       inventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
       inventorySystem.AfterDataReady += InventorySystem_AfterDataReady;
+      inventorySystem.ItemBeingDestroyed += InventorySystem_ItemBeingDestroyed;
     }
 
     void Start()
@@ -74,6 +75,17 @@ namespace Listonos.InvetorySystem
       {
         Debug.AssertFormat(hoverSpriteRenderer.drawMode == SpriteDrawMode.Sliced, "ItemHoverSprite behavior has ResizeSpriteToItemSize set to true but the HoverSprite sprite renderer is not set to SpriteDrawMode.Sliced");
         hoverSpriteRenderer.size = ItemBehaviour.ItemDatum.Size + Vector2.one * SizeAddition;
+      }
+    }
+
+    private void InventorySystem_ItemBeingDestroyed(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemBeingDestroyedEventArgs e)
+    {
+      if (ReferenceEquals(e.ItemBehaviour, this))
+      {
+        inventorySystem.AfterDataReady -= InventorySystem_AfterDataReady;
+        inventorySystem.ItemStartedDragging -= InventorySystem_ItemStartedDragging;
+        inventorySystem.ItemStoppedDragging -= InventorySystem_ItemStoppedDragging;
+        inventorySystem.ItemBeingDestroyed -= InventorySystem_ItemBeingDestroyed;
       }
     }
   }

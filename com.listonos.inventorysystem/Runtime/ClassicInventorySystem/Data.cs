@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Listonos.InvetorySystem.Classic
+namespace Listonos.InventorySystem.Classic
 {
   [Serializable]
   public class SlotDatum : SlotDatum<Slot>

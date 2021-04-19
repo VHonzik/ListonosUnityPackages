@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Listonos.InvetorySystem.Classic
+namespace Listonos.InventorySystem.Classic
 {
   public class ClassicInventorySystem : InventorySystem<Slot, ItemQuality>
   {

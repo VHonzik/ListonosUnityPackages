@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class InventorySystem<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum
@@ -40,8 +40,21 @@ namespace Listonos.InvetorySystem
       public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> TargetDropSlotBehavior { get; set; }
     }
 
+    public class ItemStacksChangedEventArgs : EventArgs
+    {
+      public ItemBehaviour<SlotEnum, ItemQualityEnum> ItemBehaviour { get; set; }
+      public int NewStackCount { get; set; }
+    }
+
+    public class ItemBeingDestroyedEventArgs : EventArgs
+    {
+      public ItemBehaviour<SlotEnum, ItemQualityEnum> ItemBehaviour { get; set; }
+    }
+
     public event EventHandler<ItemDragEventArgs> ItemStartedDragging;
     public event EventHandler<ItemDragEventArgs> ItemStoppedDragging;
+    public event EventHandler<ItemStacksChangedEventArgs> ItemStacksChanged;
+    public event EventHandler<ItemBeingDestroyedEventArgs> ItemBeingDestroyed;
     public event EventHandler DataReady;
     public event EventHandler AfterDataReady;
 
@@ -98,12 +111,18 @@ namespace Listonos.InvetorySystem
       return slots;
     }
 
+    public bool ItemStacksInSlot(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
+    {
+      var currentItemInSlot = GetItemInSlot(slot);
+      return currentItemInSlot != null && !ReferenceEquals(currentItemInSlot, item) && currentItemInSlot.Item == item.Item && currentItemInSlot.ItemDatum.Stacks && item.Stacks + currentItemInSlot.Stacks <= currentItemInSlot.ItemDatum.StackLimit;
+    }
+
     public bool ItemCanGoIntoSlot(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
     {
       var currentItemInSlot = GetItemInSlot(slot);
       var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot);
       var slotMatchCheck = (item.ItemDatum.HasItemSlot && Equals(item.ItemDatum.ItemSlot, slot.Slot));
-      var slotCheck = !item.ItemDatum.HasItemSlot || slot.SlotDatum.AllowAllItems || slotMatchCheck;
+      var slotCheck = slot.SlotDatum.AllowAllItems || slotMatchCheck;
       return occupiedCheck && slotCheck;
     }
 
@@ -121,7 +140,7 @@ namespace Listonos.InvetorySystem
         DraggingSources = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(itemToSlotsDictionary[itemBehaviour]);
         itemDropSolution.RegisterStartingSlots(DraggingSources);
       }
-      ItemStartedDragging?.Invoke(this, new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = null });
+      ItemStartedDragging?.Invoke(this, new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = null}); ;
     }
 
     public void StopDraggingItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
@@ -136,22 +155,44 @@ namespace Listonos.InvetorySystem
           slotToItemDictionary.Remove(draggingSource);
         }
 
-        var solutionSlots = itemDropSolution.GetSolutionSlots();
-        itemBehaviour.SetPositionToSlots(solutionSlots);
-
-        foreach (var solutionSlot in solutionSlots)
+        if (itemDropSolution.IsCurrentSolutionStackingFit)
         {
-          slotToItemDictionary[solutionSlot] = itemBehaviour;
+          var solutionSlots = itemDropSolution.GetSolutionSlots();
+
+          foreach (var slot in itemDropSolution.GetNotUsedSlots())
+          {
+            ItemStoppedOverlapWithSlot(slot, itemBehaviour);
+          }
+
+          eventArgs.TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
+          ItemStoppedDragging?.Invoke(this, eventArgs);
+
+          var targetItem = slotToItemDictionary[solutionSlots[0]];
+          targetItem.IncreaseStacks(itemBehaviour.Stacks);
+          ItemStacksChanged?.Invoke(this, new ItemStacksChangedEventArgs() { ItemBehaviour = targetItem, NewStackCount = targetItem.Stacks });
+
+          DestroyItem(itemBehaviour);
         }
-
-        itemToSlotsDictionary[itemBehaviour] = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
-
-        foreach (var slot in itemDropSolution.GetNotUsedSlots())
+        else
         {
-          ItemStoppedOverlapWithSlot(slot, itemBehaviour);
-        }
+          var solutionSlots = itemDropSolution.GetSolutionSlots();
+          itemBehaviour.SetPositionToSlots(solutionSlots);
 
-        eventArgs.TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
+          foreach (var solutionSlot in solutionSlots)
+          {
+            slotToItemDictionary[solutionSlot] = itemBehaviour;
+          }
+
+          itemToSlotsDictionary[itemBehaviour] = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
+
+          foreach (var slot in itemDropSolution.GetNotUsedSlots())
+          {
+            ItemStoppedOverlapWithSlot(slot, itemBehaviour);
+          }
+
+          eventArgs.TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(solutionSlots);
+          ItemStoppedDragging?.Invoke(this, eventArgs);
+        }
       }
       else
       {
@@ -160,9 +201,8 @@ namespace Listonos.InvetorySystem
         {
           ItemStoppedOverlapWithSlot(slot, itemBehaviour);
         }
+        ItemStoppedDragging?.Invoke(this, eventArgs);
       }
-
-      ItemStoppedDragging?.Invoke(this, eventArgs);
 
       DraggedItem = null;
       DraggingSources.Clear();
@@ -183,6 +223,23 @@ namespace Listonos.InvetorySystem
       {
         itemDropSolution.RemoveSlot(slotBehaviour);
       }
+    }
+
+    public void DestroyItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
+    {
+      List<SlotBehaviour<SlotEnum, ItemQualityEnum>> slots;
+      if (itemToSlotsDictionary.TryGetValue(itemBehaviour, out slots))
+      {
+        foreach (var slot in slots)
+        {
+          slotToItemDictionary.Remove(slot);
+        }
+        itemToSlotsDictionary.Remove(itemBehaviour);
+      }
+
+      ItemBeingDestroyed?.Invoke(this, new ItemBeingDestroyedEventArgs() { ItemBehaviour = itemBehaviour });
+
+      Destroy(itemBehaviour.gameObject);
     }
   }
 }

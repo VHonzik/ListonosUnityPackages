@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class SlotBehaviour<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum

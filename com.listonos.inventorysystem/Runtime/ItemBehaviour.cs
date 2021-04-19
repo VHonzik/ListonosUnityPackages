@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Listonos.InvetorySystem
+namespace Listonos.InventorySystem
 {
   public abstract class ItemBehaviour<SlotEnum, ItemQualityEnum> : MonoBehaviour
     where SlotEnum : Enum
@@ -14,6 +14,7 @@ namespace Listonos.InvetorySystem
     public InventorySystem<SlotEnum, ItemQualityEnum> InventorySystem;
 
     public ItemDatum<SlotEnum, ItemQualityEnum> ItemDatum { get; private set; }
+    public int Stacks { get; private set; } = 1;
 
     private Vector2 draggingOffset;
     private Vector3 draggingStartPosition;
@@ -24,6 +25,7 @@ namespace Listonos.InvetorySystem
       InventorySystem.DataReady += InventorySystem_DataReady;
       InventorySystem.ItemStartedDragging += InventorySystem_ItemStartedDragging;
       InventorySystem.ItemStoppedDragging += InventorySystem_ItemStoppedDragging;
+      InventorySystem.ItemBeingDestroyed += InventorySystem_ItemBeingDestroyed;
     }
 
     void OnMouseDown()
@@ -74,6 +76,11 @@ namespace Listonos.InvetorySystem
       return transform.position;
     }
 
+    public void IncreaseStacks(int amout)
+    {
+      Stacks += amout;
+    }
+
     private void InventorySystem_ItemStartedDragging(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemDragEventArgs e)
     {
       if (e.ItemBehaviour != this)
@@ -93,6 +100,17 @@ namespace Listonos.InvetorySystem
     private void InventorySystem_DataReady(object sender, EventArgs e)
     {
       ItemDatum = InventorySystem.GetItemDatum(Item);
+    }
+
+    private void InventorySystem_ItemBeingDestroyed(object sender, InventorySystem<SlotEnum, ItemQualityEnum>.ItemBeingDestroyedEventArgs e)
+    {
+      if (ReferenceEquals(e.ItemBehaviour, this))
+      {
+        InventorySystem.DataReady -= InventorySystem_DataReady;
+        InventorySystem.ItemStartedDragging -= InventorySystem_ItemStartedDragging;
+        InventorySystem.ItemStoppedDragging -= InventorySystem_ItemStoppedDragging;
+        InventorySystem.ItemBeingDestroyed -= InventorySystem_ItemBeingDestroyed;
+      }
     }
   }
 }

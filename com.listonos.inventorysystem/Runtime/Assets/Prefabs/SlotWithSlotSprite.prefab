@@ -107,7 +107,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5127095855669761228, guid: 0d237a3e31c85ef48abf5bdcf6f9e8f6, type: 3}
       propertyPath: m_Name
-      value: SlotWithSlotSprite Variant
+      value: SlotWithSlotSprite
       objectReference: {fileID: 0}
     - target: {fileID: 5127095855669761229, guid: 0d237a3e31c85ef48abf5bdcf6f9e8f6, type: 3}
       propertyPath: m_RootOrder
