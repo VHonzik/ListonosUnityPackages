@@ -2,7 +2,7 @@
 
 namespace Listonos.InventorySystem.Classic
 {
-  public class ClassicInventorySystem : InventorySystem<Slot, ItemQuality>
+  public class InventorySystem : InventorySystem<Slot, ItemQuality>
   {
     public SlotData SlotData;
     public ItemQualityData ItemQualityData;

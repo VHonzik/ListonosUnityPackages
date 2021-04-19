@@ -120,7 +120,7 @@ namespace Listonos.InventorySystem
     public bool ItemCanGoIntoSlot(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
     {
       var currentItemInSlot = GetItemInSlot(slot);
-      var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot);
+      var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot) || !slot.SlotDatum.CheckOccupancy;
       var slotMatchCheck = (item.ItemDatum.HasItemSlot && Equals(item.ItemDatum.ItemSlot, slot.Slot));
       var slotCheck = slot.SlotDatum.AllowAllItems || slotMatchCheck;
       return occupiedCheck && slotCheck;
@@ -140,7 +140,7 @@ namespace Listonos.InventorySystem
         DraggingSources = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>(itemToSlotsDictionary[itemBehaviour]);
         itemDropSolution.RegisterStartingSlots(DraggingSources);
       }
-      ItemStartedDragging?.Invoke(this, new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = null}); ;
+      ItemStartedDragging?.Invoke(this, new ItemDragEventArgs() { ItemBehaviour = itemBehaviour, SourceSlotBehaviors = DraggingSources, TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>()}); ;
     }
 
     public void StopDraggingItem(ItemBehaviour<SlotEnum, ItemQualityEnum> itemBehaviour)
@@ -196,6 +196,7 @@ namespace Listonos.InventorySystem
       }
       else
       {
+        eventArgs.TargetDropSlotBehavior = new List<SlotBehaviour<SlotEnum, ItemQualityEnum>>();
         itemBehaviour.ResetPositionToStartDrag();
         foreach (var slot in itemDropSolution.GetNotUsedSlots())
         {

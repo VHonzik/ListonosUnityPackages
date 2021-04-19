@@ -3,9 +3,10 @@
   public enum Slot
   {
     Bag,
+    Vendor,
     MainHand,
     OffHand,
-    Armor
+    Armor,
   }
 
   public enum ItemQuality
