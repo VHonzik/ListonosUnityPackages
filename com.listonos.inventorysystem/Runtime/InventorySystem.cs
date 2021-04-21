@@ -117,10 +117,15 @@ namespace Listonos.InventorySystem
       return currentItemInSlot != null && !ReferenceEquals(currentItemInSlot, item) && currentItemInSlot.Item == item.Item && currentItemInSlot.ItemDatum.Stacks && item.Stacks + currentItemInSlot.Stacks <= currentItemInSlot.ItemDatum.StackLimit;
     }
 
+    public bool ItemCanMoveToCollection(SlotBehaviour<SlotEnum, ItemQualityEnum> targetSlot, ISlotCollection<SlotEnum, ItemQualityEnum> sourceSlotCollection)
+    {
+      return !targetSlot.SlotDatum.DisallowMovingWithinCollection || !ReferenceEquals(targetSlot.Collection, sourceSlotCollection);
+    }
+
     public bool ItemCanGoIntoSlot(ItemBehaviour<SlotEnum, ItemQualityEnum> item, SlotBehaviour<SlotEnum, ItemQualityEnum> slot)
     {
       var currentItemInSlot = GetItemInSlot(slot);
-      var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot) || !slot.SlotDatum.CheckOccupancy;
+      var occupiedCheck = currentItemInSlot == null || ReferenceEquals(currentItemInSlot, slot) || slot.SlotDatum.IgnoreOccupancy;
       var slotMatchCheck = (item.ItemDatum.HasItemSlot && Equals(item.ItemDatum.ItemSlot, slot.Slot));
       var slotCheck = slot.SlotDatum.AllowAllItems || slotMatchCheck;
       return occupiedCheck && slotCheck;

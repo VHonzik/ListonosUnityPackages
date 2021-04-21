@@ -73,7 +73,8 @@ namespace Listonos.InventorySystem
   public abstract class SlotDatum<SlotEnum> : EnumKeyedDatum<SlotEnum> where SlotEnum : Enum
   {
     public bool AllowAllItems;
-    public bool CheckOccupancy;
+    public bool IgnoreOccupancy;
+    public bool DisallowMovingWithinCollection;
     public Vector2Int Size;
   }
 

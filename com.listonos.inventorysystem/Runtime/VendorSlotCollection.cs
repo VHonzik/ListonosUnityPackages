@@ -17,6 +17,7 @@ namespace Listonos.InventorySystem
     }
 
     public event EventHandler<ItemEventArgs> ItemSold;
+    public event EventHandler<ItemEventArgs> ItemBought;
 
     void Awake()
     {
@@ -34,7 +35,7 @@ namespace Listonos.InventorySystem
         {
           foreach (var dropSlot in e.TargetDropSlotBehavior)
           {
-            Debug.AssertFormat(SlotCollection.Contains(dropSlot), "VendorSlotCollection received an item drop to slots that weren't all part of it.");
+            Debug.AssertFormat(SlotCollection.Contains(dropSlot), "VendorSlotCollection received an item drop to slots where some were part of the collection and some weren't.");
           }
 
           ItemSold?.Invoke(this, new ItemEventArgs() { Item = item });
@@ -43,6 +44,22 @@ namespace Listonos.InventorySystem
           {
             InventorySystem.DestroyItem(item);
           }
+        }
+      }
+
+      if (e.SourceSlotBehaviors.Count > 0)
+      {
+        var firstSlot = e.SourceSlotBehaviors[0];
+        var item = e.ItemBehaviour;
+
+        if (SlotCollection.Contains(firstSlot))
+        {
+          foreach (var dropSlot in e.SourceSlotBehaviors)
+          {
+            Debug.AssertFormat(SlotCollection.Contains(dropSlot), "VendorSlotCollection received an item drop to slots where some were part of the collection and some weren't.");
+          }
+
+          ItemBought?.Invoke(this, new ItemEventArgs() { Item = item });
         }
       }
     }

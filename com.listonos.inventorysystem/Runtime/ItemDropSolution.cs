@@ -50,6 +50,8 @@ namespace Listonos.InventorySystem
 
     private ItemBehaviour<SlotEnum, ItemQualityEnum> item;
 
+    private ISlotCollection<SlotEnum, ItemQualityEnum> sourceSlotCollection;
+
     public List<SlotBehaviour<SlotEnum, ItemQualityEnum>> GetSolutionSlots()
     {
       return currentSolutionSlots.ToList();
@@ -90,6 +92,12 @@ namespace Listonos.InventorySystem
           currentSolutionSlots.Add(slot);
           slot.ShowDropHighlight(this);
         }
+
+        Debug.AssertFormat(slotCollections.Count <= 1, "ItemDropSolution expected to find up to 1 slot collection registered in starting slots.");
+        if (slotCollections.Count > 0)
+        {
+          sourceSlotCollection = slotCollections[0];
+        }
       }
     }
 
@@ -112,7 +120,7 @@ namespace Listonos.InventorySystem
         validStackingSlots.Add(slot);
         ConsiderValidSlotsForSolutionWithoutCacheUpdate();
       }
-      else if (!inventorySystem.ItemCanGoIntoSlot(item, slot))
+      else if (!inventorySystem.ItemCanGoIntoSlot(item, slot) || !inventorySystem.ItemCanMoveToCollection(slot, sourceSlotCollection))
       {
         invalidSlots.Add(slot);
       }
